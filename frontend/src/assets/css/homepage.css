@@ -1,0 +1,190 @@
+.main-body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+  }
+  
+  .home-left-panel {
+    flex: 1;
+    background-color: white;
+  }
+  
+  .home-right-panel {
+    flex: 1;
+    background-color: #77a6f7;
+  }
+
+  .right-img-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 40%;
+    margin: 20% auto;
+    padding: 20px 40px;
+  }
+  
+  .rightLogo {
+    max-width: 30%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+
+  .right-img-caption h1{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00887A;
+    margin-bottom: 50px;
+    cursor: default;
+  }
+
+  .right-img-caption h3{
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #232323;
+    margin-bottom: 100px;
+    cursor: default;
+    text-indent: 3px;
+    letter-spacing: 0.03em;
+  }
+  
+  .socmedLogo {
+    display: flex;
+    gap: 15px;
+}
+
+.socmedLogo img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s;
+}
+
+.socmedLogo img:hover {
+    transform: scale(1.1);
+}
+
+
+.right-panel-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.nav-icon {
+    height: 24px;
+    width: auto;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.nav-icon:hover {
+    background-color: #D3E3FC;
+    border-radius: 50%;
+}
+
+.menu-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    right: 15px;
+}
+
+.menu-button::before,
+.menu-button::after,
+.menu-button div {
+    content: "";
+    width: 20px;
+    height: 4px;
+    background-color: #00887a;
+    position: absolute;
+}
+
+.menu-button::before {
+    top: 10px;
+}
+
+.menu-button div {
+    top: 18px;
+}
+
+.menu-button::after {
+    top: 26px;
+}
+
+.menu-button:hover {
+    background-color: #D3E3FC;
+}
+
+
+  
+  @media (max-width: 768px) {
+    .main-body {
+      flex-direction: column;
+    }
+  
+    .home-left-panel {
+      display: none;
+    }
+  
+    .home-right-panel {
+      flex: 1;
+    }
+  }
+  
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.faq-modal, .menu-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+}
+
+.faq-modal h2, .menu-modal h2 {
+    margin: 0 0 10px;
+}
+
+.faq-modal button, .menu-modal button {
+    background-color: #00887A;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.faq-modal button:hover, .menu-modal button:hover {
+    background-color: #007B66;
+}
+
+
+.faq-modal p{
+    font-size: 0.8rem;
+    text-align: left;
+    margin: 5px;
+}

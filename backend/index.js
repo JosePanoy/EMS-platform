@@ -12,18 +12,17 @@ dotenv.config();
 const PORT = process.env.PORT || 7000;
 const MONGOURL = process.env.MONGOURL;
 
-app.use(cors({
-    origin: 'http://localhost:5173'
-}));
-
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
-
 app.use('/api/admin', adminRoutes);
 app.use('/api/employee', employeeRoutes);
 
-mongoose.connect(MONGOURL).then(() => {
-    console.log("Connection Success");
-    app.listen(PORT, () => {
-        console.log(`Server is working on port ${PORT}`);
-    });
-}).catch((error) => console.log(error));
+mongoose.connect(MONGOURL)
+    .then(() => {
+        console.log("Connection Success");
+        app.listen(PORT, () => {
+            console.log(`Server is working on port ${PORT}`);
+        });
+    })
+    .catch((error) => console.log(error));
+

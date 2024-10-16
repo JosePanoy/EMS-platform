@@ -1,7 +1,8 @@
-//admin.controller.js
+// admin.controller.js
 import Admin from '../model/admin.js';
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcrypt'; 
 
 export const createAdmin = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, password, idNum, icon, imageUpload } = req.body;
@@ -12,13 +13,14 @@ export const createAdmin = async (req, res) => {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10); 
         const newAdmin = new Admin({
             firstName,
             lastName,
             email,
             address,
             phoneNumber,
-            password,
+            password: hashedPassword, 
             idNum,
             icon
         });
@@ -35,4 +37,25 @@ export const createAdmin = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: 'Error registering admin', error });
     }
+};
+
+export const loginAdmin = async (req, res) => {
+    const { idNum, password } = req.body;
+
+    const admin = await Admin.findOne({ idNum });
+    if (!admin) {
+        return res.status(401).json({ message: 'Invalid ID number or password' });
+    }
+
+    // Debugging logs
+    console.log('ID Number:', idNum);
+    console.log('Password:', password);
+    console.log('Stored Password:', admin.password);
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid ID number or password' });
+    }
+
+    res.status(200).json({ message: 'Admin logged in successfully', admin });
 };

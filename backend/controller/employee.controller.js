@@ -1,7 +1,8 @@
-//employee.controller.js
+// employee.controller.js
 import Employee from '../model/employee.js';
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcrypt'; // Add this import for bcrypt
 
 export const createEmployee = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, password, idNum, userTeam, icon, imageUpload } = req.body;
@@ -12,13 +13,15 @@ export const createEmployee = async (req, res) => {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
         const newEmployee = new Employee({
             firstName,
             lastName,
             email,
             address,
             phoneNumber,
-            password,
+            password: hashedPassword, // Save the hashed password
             idNum,
             userTeam,
             icon
@@ -36,4 +39,25 @@ export const createEmployee = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: 'Error registering employee', error });
     }
+};
+
+export const loginEmployee = async (req, res) => {
+    const { idNum, password } = req.body;
+
+    const employee = await Employee.findOne({ idNum });
+    if (!employee) {
+        return res.status(401).json({ message: 'Invalid ID number or password' });
+    }
+
+    // Debugging logs
+    console.log('ID Number:', idNum);
+    console.log('Password:', password);
+    console.log('Stored Password:', employee.password); // Log the stored hashed password
+
+    const isMatch = await bcrypt.compare(password, employee.password);
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid ID number or password' });
+    }
+
+    res.status(200).json({ message: 'Employee logged in successfully', employee });
 };

@@ -1,4 +1,6 @@
+// EmployeeSlider.js
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom"; 
 import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
 import EmployeeLogo from "../assets/img/employee.png";
@@ -7,7 +9,9 @@ function EmployeeSlider() {
     const [current, setCurrent] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idNum, setIdNum] = useState(["", "", ""]);
+    const [password, setPassword] = useState("");
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
+    const navigate = useNavigate(); 
 
     const handlePrev = () => {
         setCurrent(current === 0 ? 1 : 0);
@@ -29,6 +33,7 @@ function EmployeeSlider() {
     const closeModal = () => {
         setIsModalOpen(false);
         setIdNum(["", "", ""]);
+        setPassword("");
     };
 
     const handleIdChange = (index, value) => {
@@ -39,6 +44,34 @@ function EmployeeSlider() {
 
         if (numericValue.length === 3 && index < idNum.length - 1) {
             inputRefs.current[index + 1].current.focus();
+        }
+    };
+
+    const handleLogin = async () => {
+        const idNumber = idNum.join("-");
+        const role = options[current].label.toLowerCase(); 
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/${role}/login`, { // Updated port
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idNum: idNumber, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Redirect based on user role
+                if (role === "admin") {
+                    navigate("/admin-dashboard"); // Ensure this matches the route
+                } else {
+                    navigate("/employee-dashboard"); // Ensure this matches the route
+                }
+            } else {
+                const errorResponse = await response.json();
+                alert(errorResponse.message);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
         }
     };
 
@@ -83,8 +116,13 @@ function EmployeeSlider() {
                                 />
                             ))}
                         </div>
-                        <input type="password" placeholder="Password" />
-                        <button className="unique-modal-login">Log In</button>
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button className="unique-modal-login" onClick={handleLogin}>Log In</button>
                     </div>
                 </div>
             )}

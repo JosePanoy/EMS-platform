@@ -1,0 +1,163 @@
+.admin-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    z-index: 10;
+}
+
+.toggle-side-panel {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.dashboard-overview {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: auto;
+}
+
+.admin-text {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #00887a;
+    cursor: default;
+}
+
+.time-container {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: default;
+    letter-spacing: 2px;
+}
+
+.time-pic {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+.logout-pic {
+    width: 30px;
+    height: 30px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.icon-panel {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    background-color: #77a6f7;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    transform: translateY(-50%);
+}
+
+.icon-wrapper {
+    position: relative;
+    margin: 20px 0;
+}
+
+.icon {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.tooltip {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.627);
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    top: -30px;
+    left: 100%;
+    margin-left: 20px;
+    transition: visibility 0s, opacity 0.2s;
+    opacity: 0;
+}
+
+.icon-wrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.hidden-panel {
+    position: fixed;
+    top: 50%;
+    left: -366px;
+    width: 200px;
+    max-height: 800px;
+    background-color: #77a6f7;
+    transform: translateY(-50%);
+    transition: left 0.8s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9;
+    overflow-y: auto;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.hidden-panel.open {
+    left: 0;
+}
+
+.hidden-panel button {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    color: #000;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 25px;
+}
+
+.hidden-panel button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+}
+
+.button-icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.close-button {
+    align-self: flex-end;
+    background-color: transparent;
+    color: red;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.close-button:hover {
+    color: white;
+}
+

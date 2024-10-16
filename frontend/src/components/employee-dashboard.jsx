@@ -7,16 +7,16 @@ function EmployeeMainDashboard() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            navigate('/'); // Redirect to login if no token
+            navigate('/');
         }
     }, [navigate]);
 
     const employee = JSON.parse(localStorage.getItem('employee'));
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Remove the JWT token
-        localStorage.removeItem('employee'); // Remove employee details
-        navigate('/'); // Redirect to login
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('employee'); 
+        navigate('/'); 
     };
 
     return (
@@ -28,6 +28,9 @@ function EmployeeMainDashboard() {
             <button style={{ display: 'block', margin: '0 auto' }} onClick={handleLogout}>
                 Logout
             </button>
+
+
+            
         </>
     );
 }

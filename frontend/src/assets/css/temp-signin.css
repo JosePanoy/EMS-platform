@@ -1,0 +1,152 @@
+.temp-signin-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #D3E3FC;
+    border-radius: 8px;
+}
+
+.temp-signin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.temp-input, .temp-select, .temp-button {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border: 1px solid #00887A;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.temp-input:focus, .temp-select:focus {
+    border-color: #77A6F7;
+    outline: none;
+}
+
+.temp-input::placeholder, .temp-select {
+    color: #00887A;
+}
+
+.temp-button {
+    background-color: #00887A;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.temp-button:hover {
+    background-color: #77A6F7;
+}
+
+.temp-id-display {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #00887A;
+    text-align: center;
+    border: 1px solid #00887A;
+    border-radius: 8px;
+}
+
+.temp-warning {
+    color: red;
+    font-size: 10px;
+    text-align: center;
+    font-style: italic;
+    margin-top: 5px;
+    cursor: default;
+}
+.temp-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.temp-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.temp-icon-selection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.temp-icon-selection p {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.temp-icon-selection img {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.3s;
+}
+
+.temp-icon-selection img:hover {
+    border: 2px solid #00887A;
+}
+
+.temp-selected-icon, .temp-uploaded-icon {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 10px auto;
+}
+
+.temp-file-input {
+    margin: 10px 0;
+}
+
+.temp-icon-selection p {
+    font-size: 0.7rem;
+    cursor: default;
+}
+
+.temp-message {
+    margin-top: 10px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+.temp-input {
+    padding-right: 30px; /* Add padding to the right for the eye icon */
+}
+
+.eye-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    z-index: 1; /* Ensure the button is above the input */
+}
+.temp-warning, .temp-sucess{
+    text-align: center;
+    font-size: 1.1rem;
+}

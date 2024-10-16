@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "../assets/css/homepage.css";
+import { Link } from 'react-router-dom';
+
+
 import RightLogo from "../assets/img/administrator.png";
 import FBlogo from "../assets/img/socmed logo/facebook.png";
 import INSTAlogo from "../assets/img/socmed logo/instagram.png";
@@ -74,6 +77,7 @@ function HomePage() {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="menu-modal" onClick={(e) => e.stopPropagation()}>
             <h2>Menu Options</h2>
+            <Link to="/tempsignin" style={{textDecoration: 'none', color: '#00887A', fontSize: '0.8rem'}}>Temp Sign In</Link>
             <p>Pending Feature.... 🤔🤫</p>
             <button onClick={closeModal}>Close</button>
           </div>

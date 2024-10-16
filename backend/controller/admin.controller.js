@@ -47,11 +47,7 @@ export const loginAdmin = async (req, res) => {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
 
-    // Debugging logs
-    console.log('ID Number:', idNum);
-    console.log('Password:', password);
-    console.log('Stored Password:', admin.password);
-
+    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
         return res.status(401).json({ message: 'Invalid ID number or password' });

@@ -49,11 +49,7 @@ export const loginEmployee = async (req, res) => {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
 
-    // Debugging logs
-    console.log('ID Number:', idNum);
-    console.log('Password:', password);
-    console.log('Stored Password:', employee.password); // Log the stored hashed password
-
+    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch) {
         return res.status(401).json({ message: 'Invalid ID number or password' });

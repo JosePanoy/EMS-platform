@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
 import EmployeeLogo from "../assets/img/employee.png";
@@ -6,6 +6,8 @@ import EmployeeLogo from "../assets/img/employee.png";
 function EmployeeSlider() {
     const [current, setCurrent] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [idNum, setIdNum] = useState(["", "", ""]);
+    const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
 
     const handlePrev = () => {
         setCurrent(current === 0 ? 1 : 0);
@@ -26,6 +28,18 @@ function EmployeeSlider() {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setIdNum(["", "", ""]);
+    };
+
+    const handleIdChange = (index, value) => {
+        const newIdNum = [...idNum];
+        const numericValue = value.replace(/[^0-9]/g, "");
+        newIdNum[index] = numericValue;
+        setIdNum(newIdNum);
+
+        if (numericValue.length === 3 && index < idNum.length - 1) {
+            inputRefs.current[index + 1].current.focus();
+        }
     };
 
     return (
@@ -50,15 +64,29 @@ function EmployeeSlider() {
             </div>
             {isModalOpen && (
                 <div className="unique-modal-login-container">
-    <div className="unique-modal-content">
-        <span className="unique-close" onClick={closeModal}>&times;</span>
-        <h2>{`Hi ${options[current].label}!`}</h2>
-        <input type="text" placeholder="ID Number" />
-        <input type="password" placeholder="Password" />
-        <button className="unique-modal-login">Log In</button>
-    </div>
-</div>
-
+                    <div className="unique-modal-content">
+                        <span className="unique-close" onClick={closeModal}>&times;</span>
+                        <h2>{`Hi ${options[current].label}!`}</h2>
+                        <label className="id-label">ID Number</label>
+                        <div className="id-input-container">
+                            {idNum.map((segment, index) => (
+                                <input
+                                    key={index}
+                                    type="text"
+                                    placeholder="XXX"
+                                    maxLength={3}
+                                    value={segment}
+                                    onChange={(e) => handleIdChange(index, e.target.value)}
+                                    ref={inputRefs.current[index]}
+                                    className="id-input"
+                                    style={{ marginRight: '5px' }}
+                                />
+                            ))}
+                        </div>
+                        <input type="password" placeholder="Password" />
+                        <button className="unique-modal-login">Log In</button>
+                    </div>
+                </div>
             )}
         </div>
     );

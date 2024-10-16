@@ -104,7 +104,6 @@
     background-color: #dbdbdb;
 }
 
-
 .unique-modal-login-container {
     position: fixed;
     top: 0;
@@ -135,14 +134,13 @@
 .unique-modal-content input {
     width: calc(100% - 20px);
     padding: 10px;
-    margin: 10px 0;
+    margin: 5px 0;
     border: 1px solid #00887a;
     border-radius: 5px;
     font-size: 16px;
     color: #333;
     outline: none;
     transition: border-color 0.3s;
-    margin-top: 10px;
 }
 
 .unique-modal-content input::placeholder {
@@ -150,6 +148,40 @@
 }
 
 .unique-modal-content input:focus {
+    border-color: #007060;
+}
+
+
+.id-label {
+    font-size: 1rem;
+    color: #171717;
+    margin-bottom: 5px;
+    text-align: left; 
+}
+
+.id-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0; 
+}
+
+
+.id-input {
+    width: 40px; 
+    padding: 10px;
+    margin: 0 5px; 
+    border: 1px solid #00887a;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    text-align: center; 
+    outline: none;
+    transition: border-color 0.3s;
+    margin-right: 5px;
+}
+
+.id-input:focus {
     border-color: #007060;
 }
 
@@ -171,7 +203,7 @@
     transform: translateY(-2px);
 }
 
-.unique-modal-content h2{
+.unique-modal-content h2 {
     margin-bottom: 10px;
     font-size: 1.3rem;
 }

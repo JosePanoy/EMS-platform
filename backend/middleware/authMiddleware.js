@@ -1,27 +1,18 @@
 // middleware/authMiddleware.js
-import Admin from '../model/admin.js';
-import Employee from '../model/employee.js';
+import jwt from 'jsonwebtoken';
 
-export const authenticateUser = async (req, res, next) => {
-    const { idNum, password } = req.body;
+export const authenticateUser = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
 
-    const admin = await Admin.findOne({ idNum });
-    if (admin) {
-
-        if (await admin.comparePassword(password)) {
-            req.user = admin; 
-            return next();
-        }
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
     }
 
-    const employee = await Employee.findOne({ idNum });
-    if (employee) {
-       
-        if (await employee.comparePassword(password)) {
-            req.user = employee; 
-            return next();
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Unauthorized' });
         }
-    }
-
-    return res.status(401).json({ message: 'Invalid ID number or password' });
+        req.user = decoded;
+        next();
+    });
 };

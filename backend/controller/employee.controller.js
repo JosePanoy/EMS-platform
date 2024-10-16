@@ -1,8 +1,8 @@
-// employee.controller.js
 import Employee from '../model/employee.js';
 import fs from 'fs';
 import path from 'path';
-import bcrypt from 'bcrypt'; // Add this import for bcrypt
+import bcrypt from 'bcrypt'; 
+import jwt from 'jsonwebtoken'; 
 
 export const createEmployee = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, password, idNum, userTeam, icon, imageUpload } = req.body;
@@ -13,15 +13,14 @@ export const createEmployee = async (req, res) => {
             return res.status(400).json({ message: 'Email already registered' });
         }
 
-        // Hash the password before saving
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newEmployee = new Employee({
             firstName,
             lastName,
             email,
             address,
             phoneNumber,
-            password: hashedPassword, // Save the hashed password
+            password: hashedPassword,
             idNum,
             userTeam,
             icon
@@ -43,17 +42,14 @@ export const createEmployee = async (req, res) => {
 
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
-
     const employee = await Employee.findOne({ idNum });
     if (!employee) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
-
-    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
-
-    res.status(200).json({ message: 'Employee logged in successfully', employee });
+    const token = jwt.sign({ id: employee._id, role: 'employee' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };

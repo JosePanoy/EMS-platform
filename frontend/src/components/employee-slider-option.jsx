@@ -1,5 +1,4 @@
-// EmployeeSlider.js
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
 import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
@@ -12,6 +11,13 @@ function EmployeeSlider() {
     const [password, setPassword] = useState("");
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
     const navigate = useNavigate(); 
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate(current === 0 ? "/admin-dashboard" : "/employee-dashboard");
+        }
+    }, [navigate, current]);
 
     const handlePrev = () => {
         setCurrent(current === 0 ? 1 : 0);
@@ -52,7 +58,7 @@ function EmployeeSlider() {
         const role = options[current].label.toLowerCase(); 
 
         try {
-            const response = await fetch(`http://localhost:8000/api/${role}/login`, { // Updated port
+            const response = await fetch(`http://localhost:8000/api/${role}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idNum: idNumber, password })
@@ -60,12 +66,9 @@ function EmployeeSlider() {
 
             if (response.ok) {
                 const data = await response.json();
-                // Redirect based on user role
-                if (role === "admin") {
-                    navigate("/admin-dashboard"); // Ensure this matches the route
-                } else {
-                    navigate("/employee-dashboard"); // Ensure this matches the route
-                }
+                localStorage.setItem('token', data.token);
+                localStorage.setItem(role === "admin" ? 'admin' : 'employee', JSON.stringify(data.admin || data.employee));
+                navigate(role === "admin" ? "/admin-dashboard" : "/employee-dashboard");
             } else {
                 const errorResponse = await response.json();
                 alert(errorResponse.message);

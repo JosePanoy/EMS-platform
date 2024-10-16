@@ -1,8 +1,8 @@
-// admin.controller.js
 import Admin from '../model/admin.js';
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcrypt'; 
+import jwt from 'jsonwebtoken'; 
 
 export const createAdmin = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, password, idNum, icon, imageUpload } = req.body;
@@ -41,17 +41,14 @@ export const createAdmin = async (req, res) => {
 
 export const loginAdmin = async (req, res) => {
     const { idNum, password } = req.body;
-
     const admin = await Admin.findOne({ idNum });
     if (!admin) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
-
-    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
-
-    res.status(200).json({ message: 'Admin logged in successfully', admin });
+    const token = jwt.sign({ id: admin._id, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Admin logged in successfully', token, admin });
 };

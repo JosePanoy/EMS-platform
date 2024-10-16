@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../assets/css/temp-signin.css';
 import { Link } from 'react-router-dom';
+import Resizer from 'react-image-file-resizer';
+
 import boy1 from "../assets/img/employee/boy1.png";
 import boy2 from "../assets/img/employee/boy2.png";
 import boy3 from "../assets/img/employee/boy3.png";
@@ -38,13 +40,24 @@ function TempSignIn() {
     };
 
     const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => setImageUpload(reader.result);
-            reader.readAsDataURL(file);
-        }
-    };
+    const file = event.target.files[0];
+    if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg')) {
+        Resizer.imageFileResizer(
+            file,
+            300, 
+            350, 
+            'JPEG', 
+            100, 
+            0, 
+            (uri) => {
+                setImageUpload(uri);
+            },
+            'base64' 
+        );
+    } else {
+        setWarning('Please upload an image in PNG, JPG, or JPEG format.');
+    }
+};
 
     const resetForm = () => {
         setIdNum('');
@@ -68,8 +81,22 @@ function TempSignIn() {
         setWarning('');
         setSuccessMessage('');
 
-        if (!firstName || !lastName || !email || !address || !phoneNumber || !userTeam || !password || !confirmPassword || !selectedIcon) {
+        if (!firstName || !lastName || !email || !address || !phoneNumber || !userTeam || !password || !confirmPassword) {
             setWarning('Please fill in all required fields and select an icon.');
+            setLoading(false);
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setWarning('Passwords do not match.');
+            setLoading(false);
+            return;
+        }
+
+        const icon = imageUpload || selectedIcon;
+
+        if (!icon) {
+            setWarning('Please choose a profile icon or upload an image.');
             setLoading(false);
             return;
         }
@@ -83,6 +110,7 @@ function TempSignIn() {
             userTeam,
             password,
             idNum,
+            icon
         };
 
         try {
@@ -100,7 +128,6 @@ function TempSignIn() {
                 throw new Error(errorResponse.message);
             }
 
-            const responseData = await response.json();
             setSuccessMessage('Successfully signed in!');
             setTimeout(resetForm, 3000);
         } catch (error) {

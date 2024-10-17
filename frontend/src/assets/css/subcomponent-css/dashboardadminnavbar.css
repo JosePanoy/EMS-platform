@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 5px 20px;
     background-color: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
     position: relative;
@@ -60,7 +60,7 @@
     background-color: #77a6f7;
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    padding: 10px;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
     transform: translateY(-50%);
@@ -72,8 +72,8 @@
 }
 
 .icon {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
 }
 
@@ -96,6 +96,22 @@
     visibility: visible;
     opacity: 1;
 }
+
+.nav-links {
+    display: flex;
+    justify-content: flex-start;
+    padding: 5px 0;
+}
+
+.nav-link {
+    font-size: 0.7rem;
+    color: rgb(31, 31, 31);
+    text-decoration: none;
+    margin-right: 10px;
+    margin-left: 10px; 
+    font-weight: 700;
+}
+
 
 .hidden-panel {
     position: fixed;
@@ -120,7 +136,7 @@
     left: 0;
 }
 
-.hidden-panel button {
+.hidden-panel-button {
     margin: 10px 0;
     padding: 10px;
     background-color: transparent;
@@ -133,9 +149,10 @@
     align-items: center;
     transition: background-color 0.3s ease, color 0.3s ease;
     border-radius: 25px;
+    text-decoration: none;
 }
 
-.hidden-panel button:hover {
+.hidden-panel-button:hover {
     background-color: rgba(0, 0, 0, 0.1);
     color: #ffffff;
 }
@@ -161,3 +178,88 @@
     color: white;
 }
 
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+}
+
+
+.logout-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.logout-modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logout-modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.logout-modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.loading-modal {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-modal img {
+    width: 50px;
+    height: auto;
+}
+
+.loading-modal p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.logout-modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-modal-content button.confirm {
+    background-color: #00887a;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+.logout-modal-content button.confirm:hover {
+    background-color: #007060;
+}
+
+.logout-modal-content button.cancel {
+    background-color: #dbdbdb;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.logout-modal-content button.cancel:hover {
+    background-color: #c0c0c0;
+}

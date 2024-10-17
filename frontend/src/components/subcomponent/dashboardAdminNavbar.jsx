@@ -8,10 +8,15 @@ import UserManagementIcon from "../../assets/img/user-management.png";
 import AttendanceLeaveIcon from "../../assets/img/attendance.png";
 import PerformanceIcon from "../../assets/img/performance-overview.png";
 import InternalMessaging from "../../assets/img/internal-messaging.png";
+import { Link, useNavigate } from 'react-router-dom';
+import LoadingGif from "../../assets/img/gif/loading.gif";
 
-function AdminDashNavbar({ admin, navigate }) {
+function AdminDashNavbar({ admin }) {
     const [currentTime, setCurrentTime] = useState('');
     const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const updateTime = () => {
@@ -26,9 +31,20 @@ function AdminDashNavbar({ admin, navigate }) {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('admin');
-        navigate('/');
+        setIsLogoutModalOpen(true);
+    };
+
+    const confirmLogout = () => {
+        setIsLoading(true);
+        setTimeout(() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin');
+            navigate('/', { replace: true });
+        }, 2500);
+    };
+
+    const cancelLogout = () => {
+        setIsLogoutModalOpen(false);
     };
 
     const togglePanel = () => {
@@ -45,54 +61,85 @@ function AdminDashNavbar({ admin, navigate }) {
                 <div className="time-container">
                     <img src={TimePic} alt="Time" className="time-pic" />
                     <span>{currentTime}</span>
-                    <img src={LogoutPic} alt="Logout" className="logout-pic" onClick={handleLogout} />
+                    <img src={LogoutPic} alt="Logout" className="logout-pic" onClick={handleLogout} style={{ cursor: 'pointer' }} />
                 </div>
             </nav>
-            <div className={`icon-panel`}>
-                <div className="icon-wrapper">
+
+            <div className="icon-panel">
+                <Link to="/admin/overview" className="icon-wrapper">
                     <img src={MainDashIcon} alt="Main Dashboard" className="icon" />
                     <span className="tooltip">Dashboard</span>
-                </div>
-                <div className="icon-wrapper">
+                </Link>
+                <Link to="/admin/user-management" className="icon-wrapper">
                     <img src={UserManagementIcon} alt="User Management" className="icon" />
                     <span className="tooltip">User Management</span>
-                </div>
-                <div className="icon-wrapper">
+                </Link>
+                <Link to="/admin/attendance-leave" className="icon-wrapper">
                     <img src={AttendanceLeaveIcon} alt="Attendance & Leave" className="icon" />
                     <span className="tooltip">Attendance & Leave</span>
-                </div>
-                <div className="icon-wrapper">
+                </Link>
+                <Link to="/admin/performance-overview" className="icon-wrapper">
                     <img src={PerformanceIcon} alt="Performance Overview" className="icon" />
                     <span className="tooltip">Performance Overview</span>
-                </div>
-                <div className="icon-wrapper">
+                </Link>
+                <Link to="/admin/messaging-notification" className="icon-wrapper">
                     <img src={InternalMessaging} alt="Internal Messaging" className="icon" />
                     <span className="tooltip">Internal Messaging</span>
-                </div>
+                </Link>
             </div>
+
+            <div className="nav-links">
+                <Link to="/admin/overview" className="nav-link">Dashboard Overview</Link>
+                <Link to="/admin/user-management" className="nav-link">User Management</Link>
+                <Link to="/admin/performance-overview" className="nav-link">Performance Overview</Link>
+                <Link to="/admin/attendance-leave" className="nav-link">Attendance & Leave Management</Link>
+                <Link to="/admin/messaging-notification" className="nav-link">Internal Messaging & Notifications</Link>
+            </div>
+
             <div className={`hidden-panel ${isPanelOpen ? 'open' : ''}`}>
                 <button className="close-button" onClick={togglePanel}>X</button>
-                <button>
+                <Link to="/admin/overview" className="hidden-panel-button">
                     <img src={MainDashIcon} alt="Dashboard" className="button-icon" />
                     Dashboard Overview
-                </button>
-                <button>
+                </Link>
+                <Link to="/admin/user-management" className="hidden-panel-button">
                     <img src={UserManagementIcon} alt="User Management" className="button-icon" />
                     User Management
-                </button>
-                <button>
+                </Link>
+                <Link to="/admin/attendance-leave" className="hidden-panel-button">
                     <img src={AttendanceLeaveIcon} alt="Attendance & Leave" className="button-icon" />
                     Attendance & Leave Management
-                </button>
-                <button>
+                </Link>
+                <Link to="/admin/performance-overview" className="hidden-panel-button">
                     <img src={PerformanceIcon} alt="Performance Overview" className="button-icon" />
                     Performance Overview
-                </button>
-                <button>
+                </Link>
+                <Link to="/admin/messaging-notification" className="hidden-panel-button">
                     <img src={InternalMessaging} alt="Internal Messaging" className="button-icon" />
                     Internal Messaging and Notifications
-                </button>
+                </Link>
             </div>
+
+            {isLogoutModalOpen && (
+                <div className="logout-modal">
+                    <div className="logout-modal-content">
+                        {!isLoading ? (
+                            <>
+                                <h2>Confirm Logout</h2>
+                                <p>Are you sure you want to logout?</p>
+                                <button className="confirm" onClick={confirmLogout}>Confirm</button>
+                                <button className="cancel" onClick={cancelLogout}>Cancel</button>
+                            </>
+                        ) : (
+                            <div className="loading-modal">
+                                <img src={LoadingGif} alt="Loading..." />
+                                <p>Logging out...</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
         </>
     );
 }

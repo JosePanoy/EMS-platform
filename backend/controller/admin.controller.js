@@ -1,3 +1,4 @@
+// admin.controller.js
 import Admin from '../model/admin.js';
 import fs from 'fs';
 import path from 'path';
@@ -51,4 +52,33 @@ export const loginAdmin = async (req, res) => {
     }
     const token = jwt.sign({ id: admin._id, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(200).json({ message: 'Admin logged in successfully', token, admin });
+};
+
+
+export const getAllAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find();
+        return res.status(200).json(admins);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching admins', error });
+    }
+};
+
+export const deleteAdmins = async (req, res) => {
+    const { ids } = req.body;
+
+    try {
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ message: 'No IDs provided for deletion.' });
+        }
+
+        const result = await Admin.deleteMany({ _id: { $in: ids } });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'No admins found with the provided IDs.' });
+        }
+        return res.status(200).json({ message: 'Admins deleted successfully.', deletedCount: result.deletedCount });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error deleting admins', error });
+    }
 };

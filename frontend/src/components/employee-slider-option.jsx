@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
 import EmployeeLogo from "../assets/img/employee.png";
+import LoadingGif from "../assets/img/gif/loading.gif";
 
 function EmployeeSlider() {
     const [current, setCurrent] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [idNum, setIdNum] = useState(["", "", ""]);
     const [password, setPassword] = useState("");
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
@@ -40,6 +42,7 @@ function EmployeeSlider() {
         setIsModalOpen(false);
         setIdNum(["", "", ""]);
         setPassword("");
+        setIsLoading(false);
     };
 
     const handleIdChange = (index, value) => {
@@ -56,6 +59,7 @@ function EmployeeSlider() {
     const handleLogin = async () => {
         const idNumber = idNum.join("-");
         const role = options[current].label.toLowerCase(); 
+        setIsLoading(true);
 
         try {
             const response = await fetch(`http://localhost:8000/api/${role}/login`, {
@@ -68,13 +72,20 @@ function EmployeeSlider() {
                 const data = await response.json();
                 localStorage.setItem('token', data.token);
                 localStorage.setItem(role === "admin" ? 'admin' : 'employee', JSON.stringify(data.admin || data.employee));
-                navigate(role === "admin" ? "/admin-dashboard" : "/employee-dashboard");
+                setTimeout(() => {
+                    closeModal();
+                    navigate(role === "admin" ? "/admin" : "/employee-dashboard");
+                }, 3000);
             } else {
-                const errorResponse = await response.json();
-                alert(errorResponse.message);
+                setTimeout(() => {
+                    alert("Wrong password or ID number. Try again ☹️");
+                    setIsLoading(false);
+                    closeModal();
+                }, 2500);
             }
         } catch (error) {
             console.error('Login error:', error);
+            setIsLoading(false);
         }
     };
 
@@ -101,31 +112,39 @@ function EmployeeSlider() {
             {isModalOpen && (
                 <div className="unique-modal-login-container">
                     <div className="unique-modal-content">
-                        <span className="unique-close" onClick={closeModal}>&times;</span>
-                        <h2>{`Hi ${options[current].label}!`}</h2>
-                        <label className="id-label">ID Number</label>
-                        <div className="id-input-container">
-                            {idNum.map((segment, index) => (
+                        {isLoading ? (
+                            <div className="loading-modal">
+                                <img src={LoadingGif} alt="Loading..." />
+                                <p>Processing...</p>
+                            </div>
+                        ) : (
+                            <>
+                                <h2>{`Hi ${options[current].label}!`}</h2>
+                                <label className="id-label">ID Number</label>
+                                <div className="id-input-container">
+                                    {idNum.map((segment, index) => (
+                                        <input
+                                            key={index}
+                                            type="text"
+                                            placeholder="XXX"
+                                            maxLength={3}
+                                            value={segment}
+                                            onChange={(e) => handleIdChange(index, e.target.value)}
+                                            ref={inputRefs.current[index]}
+                                            className="id-input"
+                                            style={{ marginRight: '5px' }}
+                                        />
+                                    ))}
+                                </div>
                                 <input
-                                    key={index}
-                                    type="text"
-                                    placeholder="XXX"
-                                    maxLength={3}
-                                    value={segment}
-                                    onChange={(e) => handleIdChange(index, e.target.value)}
-                                    ref={inputRefs.current[index]}
-                                    className="id-input"
-                                    style={{ marginRight: '5px' }}
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
-                            ))}
-                        </div>
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button className="unique-modal-login" onClick={handleLogin}>Log In</button>
+                                <button className="unique-modal-login" onClick={handleLogin}>Log In</button>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

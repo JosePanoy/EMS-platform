@@ -1,10 +1,13 @@
 // employee.routes.js
 import express from 'express';
-import { createEmployee, loginEmployee } from '../controller/employee.controller.js';
+import { createEmployee, loginEmployee, getAllEmployees, deleteEmployees } from '../controller/employee.controller.js';
 
 const router = express.Router();
 
 router.post('/', createEmployee);
-router.post('/login', loginEmployee); // Add login route
+router.post('/login', loginEmployee); 
+router.get('/', getAllEmployees);
+router.delete('/', deleteEmployees);
+
 
 export default router;

@@ -1,0 +1,144 @@
+.admin-table-container {
+    margin: 20px;
+    width: 85%;
+    margin: 20px auto;
+    margin-top: 50px;
+}
+
+.table-scrollable {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #999;
+}
+
+.admin-table th, .admin-table td {
+    padding: 10px;
+}
+
+.admin-table th {
+    background-color: #ededed;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.admin-table tr {
+    border-bottom: 1px solid #999;
+}
+
+.admin-table td {
+    font-size: 0.8rem;
+    cursor: default;
+}
+
+.admin-table img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.menu-panel {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #999;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 10;
+    color: #626262;
+}
+
+.add-admin-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #9a9a9a;
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    color: #303030;
+}
+
+.delete-admin-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #9a9a9a;
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    color: #303030;
+   
+}
+
+
+/* ConfirmDeleteModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}
+
+.modal-content p {
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: default;
+}
+
+.modal-admin-list {
+    text-align: left;
+    margin: 10px 0;
+}
+
+.modal-admin-item {
+    margin-bottom: 10px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-actions button:hover {
+    transform: scale(1.05);
+}
+
+.modal-actions button:first-child {
+    background-color: #28a745;
+    color: white;
+}
+
+.modal-actions button:last-child {
+    background-color: #dc3545;
+    color: white;
+}

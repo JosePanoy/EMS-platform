@@ -10,7 +10,7 @@ const employeeSchema = new mongoose.Schema({
     userTeam: { type: String, required: true },
     idNum: { type: String, required: true },
     password: { type: String, required: true },
-    icon: { type: String, required: true }
+    icon: { type: String, required: true }  // for user profile or icon selected
 }, { timestamps: true });
 
 export default mongoose.model('Employee', employeeSchema);

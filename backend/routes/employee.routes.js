@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/', createEmployee);
 router.post('/login', loginEmployee); 
-router.get('/', getAllEmployees);
+router.get('/', getAllEmployees); // api for displaying all admin
 router.delete('/', deleteEmployees);
 
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { FaEllipsisV, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaPlus, FaTrash } from 'react-icons/fa';
+import AddEmployeeModal from './addEmployeeModal';
 import "../../assets/css/subcomponent-css/displayAll-Employee.css";
 
 function DisplayAllEmployee() {
@@ -11,6 +12,7 @@ function DisplayAllEmployee() {
     const [menuVisible, setMenuVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [addEmployeeModalVisible, setAddEmployeeModalVisible] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
@@ -28,7 +30,7 @@ function DisplayAllEmployee() {
 
     useEffect(() => {
         const results = employees.filter(employee =>
-            `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+            `${employee.firstName} ${employee.idNum} ${employee.email} ${employee.address} ${employee.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredEmployees(results);
     }, [searchTerm, employees]);
@@ -65,38 +67,33 @@ function DisplayAllEmployee() {
         setModalVisible(true);
     };
 
-    const handleMenuDeleteClick = (employee) => {
-        setSelectedEmployee(employee);
-        setModalVisible(true);
+    const handleMenuDeleteClick = () => {
+        if (selectedEmployee) {
+            setSelectedEmployeeIds([selectedEmployee._id]);
+            setModalVisible(true);
+        }
     };
 
     const handleConfirmDelete = async () => {
-        if (selectedEmployeeIds.length > 0) {
-            try {
-                await axios.delete('http://localhost:8000/api/employee', {
-                    data: { ids: selectedEmployeeIds }
-                });
-                const updatedEmployees = employees.filter(emp => !selectedEmployeeIds.includes(emp._id));
-                setEmployees(updatedEmployees);
-                setFilteredEmployees(updatedEmployees);
-                setSelectedEmployeeIds([]);
-            } catch (error) {
-                console.error("Error deleting employees:", error);
-            }
-        } else if (selectedEmployee) {
-            try {
-                await axios.delete('http://localhost:8000/api/employee', {
-                    data: { ids: [selectedEmployee._id] }
-                });
-                const updatedEmployees = employees.filter(emp => emp._id !== selectedEmployee._id);
-                setEmployees(updatedEmployees);
-                setFilteredEmployees(updatedEmployees);
-                setSelectedEmployee(null);
-            } catch (error) {
-                console.error("Error deleting employee:", error);
-            }
+        try {
+            const idsToDelete = selectedEmployeeIds.length > 0 ? selectedEmployeeIds : [selectedEmployee._id];
+            await axios.delete('http://localhost:8000/api/employee', {
+                data: { ids: idsToDelete }
+            });
+            const updatedEmployees = employees.filter(emp => !idsToDelete.includes(emp._id));
+            setEmployees(updatedEmployees);
+            setFilteredEmployees(updatedEmployees);
+            setSelectedEmployeeIds([]);
+            setSelectedEmployee(null);
+        } catch (error) {
+            console.error("Error deleting employees:", error);
         }
         setModalVisible(false);
+    };
+
+    const handleEmployeeAdded = (newEmployee) => {
+        setEmployees(prev => [...prev, newEmployee]);
+        setFilteredEmployees(prev => [...prev, newEmployee]);
     };
 
     return (
@@ -110,21 +107,14 @@ function DisplayAllEmployee() {
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ padding: '5px 30px 5px 10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            style={{ padding: '7px 50px 7px 5px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '-1px' }}
                         />
-                        <FaSearch style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#aaa' }} />
                     </div>
-                    <div
-                        className="add-employee-button"
-                        onClick={() => alert("Add Employee")}
-                    >
+                    <div className="add-employee-button" onClick={() => setAddEmployeeModalVisible(true)}>
                         <FaPlus style={{ marginRight: '5px', color: '#00887A' }} />
                         <span>Add Employee</span>
                     </div>
-                    <div
-                        className="delete-employee-button"
-                        onClick={handleDeleteEmployees}
-                    >
+                    <div className="delete-employee-button" onClick={handleDeleteEmployees}>
                         <FaTrash style={{ marginRight: '5px', color: '#872323' }} />
                         <span>Delete</span>
                     </div>
@@ -167,17 +157,13 @@ function DisplayAllEmployee() {
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <FaEllipsisV
                                             onClick={() => handleMenuClick(employee)}
-                                            style={{
-                                                cursor: 'pointer',
-                                                fontSize: '0.7rem',
-                                                color: '#414141'
-                                            }}
+                                            style={{ cursor: 'pointer', fontSize: '0.7rem', color: '#414141' }}
                                         />
                                         {menuVisible && selectedEmployee === employee && (
                                             <div className="menu-panel" ref={menuRef}>
                                                 <div onClick={() => alert("View Profile")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>View Profile</div>
                                                 <div onClick={() => alert("Update")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Update</div>
-                                                <div onClick={() => handleMenuDeleteClick(employee)} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Delete</div>
+                                                <div onClick={handleMenuDeleteClick} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Delete</div>
                                             </div>
                                         )}
                                     </div>
@@ -190,7 +176,7 @@ function DisplayAllEmployee() {
             {modalVisible && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h3 style={{cursor: 'default'}}>Confirm Deletion</h3>
+                        <h3>Confirm Deletion</h3>
                         <p>Are you sure you want to delete the following employee(s)?</p>
                         <div className="modal-employee-list">
                             {selectedEmployeeIds.length > 0 ? (
@@ -198,15 +184,15 @@ function DisplayAllEmployee() {
                                     const employee = employees.find(emp => emp._id === id);
                                     return (
                                         <p className="modal-employee-item" key={id}>
-                                            <strong>Full Name:</strong> {employee.firstName} {employee.lastName} 
-                                         <br />   <strong> ID Number:</strong> {employee.idNum}
+                                            <strong>Full Name:</strong> {employee.firstName} {employee.lastName}
+                                            <br /><strong>ID Number:</strong> {employee.idNum}
                                         </p>
                                     );
                                 })
                             ) : (
                                 <p>
-                                    <strong>Full Name:</strong> {selectedEmployee?.firstName} {selectedEmployee?.lastName} 
-                                    <br />     <strong> ID Number:</strong> {selectedEmployee?.idNum}
+                                    <strong>Full Name:</strong> {selectedEmployee?.firstName} {selectedEmployee?.lastName}
+                                    <br /><strong>ID Number:</strong> {selectedEmployee?.idNum}
                                 </p>
                             )}
                         </div>
@@ -217,7 +203,13 @@ function DisplayAllEmployee() {
                     </div>
                 </div>
             )}
-
+            {addEmployeeModalVisible && (
+                <AddEmployeeModal 
+                    isOpen={addEmployeeModalVisible} 
+                    onClose={() => setAddEmployeeModalVisible(false)} 
+                    onEmployeeAdded={handleEmployeeAdded} 
+                />
+            )}
         </div>
     );
 }

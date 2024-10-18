@@ -6,7 +6,7 @@ function AttendanceLeaveManagement() {
     return(
         <>
 
-        <h2 style={{ textAlign: 'center', margin: '100px 0 auto' }}>
+        <h2 style={{ textAlign: 'center', margin: '100px 0 auto', fontWeight: '600' }}>
        Attendance & Leave Management
         </h2>
 
@@ -15,4 +15,4 @@ function AttendanceLeaveManagement() {
     )
 }
 
-export default AttendanceLeaveManagement;
+export default AttendanceLeaveManagement; 

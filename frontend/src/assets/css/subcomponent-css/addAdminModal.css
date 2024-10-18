@@ -1,0 +1,126 @@
+.add-admin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9;
+}
+
+.add-admin-modal-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+}
+
+.add-admin-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h2 {
+    margin: 0;
+}
+
+.add-admin-close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #dc3545;
+}
+
+.add-admin-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.add-admin-form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.add-admin-password-container {
+    position: relative;
+}
+
+.add-admin-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.add-admin-icon-panel {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-admin-icon-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.add-admin-icon-selection img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.add-admin-selected-icon, .add-admin-uploaded-icon {
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%;
+    border: 2px solid #00887a;
+    margin: 20px auto; 
+    display: block; 
+}
+
+button[type="button"] {
+    background-color: #00887A;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #00887A;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.add-admin-warning {
+    color: red;
+    font-size: 0.6rem;
+}

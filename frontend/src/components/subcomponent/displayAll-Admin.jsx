@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { FaEllipsisV, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaPlus, FaTrash } from 'react-icons/fa';
+import AddAdminModal from './addAdminModal';
 import "../../assets/css/subcomponent-css/displayAll-Admin.css";
 
 function DisplayAllAdmin() {
@@ -11,6 +12,7 @@ function DisplayAllAdmin() {
     const [menuVisible, setMenuVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [addAdminModalVisible, setAddAdminModalVisible] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
@@ -89,6 +91,11 @@ function DisplayAllAdmin() {
         setModalVisible(false);
     };
 
+    const handleAdminAdded = (newAdmin) => {
+        setAdmins(prev => [...prev, newAdmin]);
+        setFilteredAdmins(prev => [...prev, newAdmin]);
+    };
+
     return (
         <div className="admin-table-container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -100,11 +107,10 @@ function DisplayAllAdmin() {
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{ padding: '5px 30px 5px 10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            style={{ padding: '7px 50px 7px 5px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '-1px' }}
                         />
-                        <FaSearch style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#aaa' }} />
                     </div>
-                    <div className="add-admin-button" onClick={() => alert("Add Admin Member")}>
+                    <div className="add-admin-button" onClick={() => setAddAdminModalVisible(true)}>
                         <FaPlus style={{ marginRight: '5px', color: '#00887A' }} />
                         <span>Add Admin Member</span>
                     </div>
@@ -196,6 +202,13 @@ function DisplayAllAdmin() {
                         </div>
                     </div>
                 </div>
+            )}
+            {addAdminModalVisible && (
+                <AddAdminModal 
+                    isOpen={addAdminModalVisible} 
+                    onClose={() => setAddAdminModalVisible(false)} 
+                    onAdminAdded={handleAdminAdded} 
+                />
             )}
         </div>
     );

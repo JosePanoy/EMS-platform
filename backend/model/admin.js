@@ -9,7 +9,7 @@ const adminSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true },
     password: { type: String, required: true },
     idNum: { type: String, required: true },
-    icon: { type: String, required: true }
+    icon: { type: String, required: true } // for user profile or icon selected
 }, { timestamps: true });
 
 const Admin = mongoose.model('Admin', adminSchema);

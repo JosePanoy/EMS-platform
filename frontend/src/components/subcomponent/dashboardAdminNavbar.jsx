@@ -126,7 +126,7 @@ function AdminDashNavbar({ admin }) {
                         {!isLoading ? (
                             <>
                                 <h2>Confirm Logout</h2>
-                                <p>Are you sure you want to logout?</p>
+                                <p>Are you sure you want to logout? 🤔</p>
                                 <button className="confirm" onClick={confirmLogout}>Confirm</button>
                                 <button className="cancel" onClick={cancelLogout}>Cancel</button>
                             </>

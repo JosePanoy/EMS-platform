@@ -9,7 +9,7 @@ function UserManagement() {
 
     return (
         <>
-            <h2 style={{ textAlign: 'center', margin: '30px 0 auto', cursor: 'default' }}>
+            <h2 style={{ textAlign: 'center', margin: '30px 0 auto', cursor: 'default', fontWeight: '600' }}>
                 User Management
             </h2>
 

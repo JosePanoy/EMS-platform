@@ -26,6 +26,9 @@ function DisplayAllAdmin() {
             }
         };
         fetchAdmins();
+
+        const intervalId = setInterval(fetchAdmins, 5000);
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {

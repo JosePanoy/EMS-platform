@@ -104,7 +104,6 @@ function AddAdminModal({ isOpen, onClose }) {
             email,
             address,
             phoneNumber: phone,
-            userTeam,
             password,
             idNum,
             icon
@@ -141,7 +140,6 @@ function AddAdminModal({ isOpen, onClose }) {
             setPhone('');
             setPassword('');
             setConfirmPassword('');
-            setUserTeam('');
             setIdNum('');
             setSelectedIcon(null);
             setImageUpload(null);
@@ -197,41 +195,6 @@ function AddAdminModal({ isOpen, onClose }) {
                                 onChange={(e) => setPhone(e.target.value)}
                                 required
                             />
-                            <button type="button" onClick={generateIdNum}>Generate ID Number</button>
-                            <input
-                                type="text"
-                                placeholder="ID Number"
-                                value={idNum}
-                                readOnly
-                            />
-                            {warning && <span style={{ color: 'red', textAlign: 'center', display: 'block' }}>{warning}</span>}
-                            {successMessage && <span style={{ color: 'green', textAlign: 'center', display: 'block' }}>{successMessage}</span>}
-                        </div>
-                        <div className="add-admin-form-column">
-                            <select
-                                value={userTeam}
-                                onChange={(e) => setUserTeam(e.target.value)}
-                                required
-                            >
-                                <option value="">Select Team</option>
-                                <option value="sales">Sales Team</option>
-                                <option value="marketing">Marketing Team</option>
-                                <option value="tech">Tech Team</option>
-                                <option value="software-development">Software Development Team</option>
-                                <option value="call-representative">Call Representative Team</option>
-                            </select>
-                            <div className="add-admin-password-container">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                                <button style={{ background: 'none', border: 'none', color: '#00887A' }} className="add-admin-password-toggle" type="button" onClick={togglePasswordVisibility}>
-                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                </button>
-                            </div>
                             <div className="add-admin-password-container">
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -244,6 +207,30 @@ function AddAdminModal({ isOpen, onClose }) {
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>
                             </div>
+                            {warning && <span style={{ color: 'red', textAlign: 'center', display: 'block' }}>{warning}</span>}
+                            {successMessage && <span style={{ color: 'green', textAlign: 'center', display: 'block' }}>{successMessage}</span>}
+                        </div>
+                        <div className="add-admin-form-column">
+                        <button type="button" onClick={generateIdNum}>Generate ID Number</button>
+                            <input
+                                type="text"
+                                placeholder="ID Number"
+                                value={idNum}
+                                readOnly
+                            />
+                            <div className="add-admin-password-container">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button style={{ background: 'none', border: 'none', color: '#00887A' }} className="add-admin-password-toggle" type="button" onClick={togglePasswordVisibility}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
+
                             <button type="button" onClick={() => setIconPanelVisible(!iconPanelVisible)}>Choose Icon</button>
                             {iconPanelVisible && (
                                 <div className="add-admin-icon-panel">

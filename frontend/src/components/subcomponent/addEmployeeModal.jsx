@@ -184,29 +184,6 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
                                 onChange={(e) => setPhone(e.target.value)}
                                 required
                             />
-                            <button type="button" onClick={generateIdNum}>Generate ID Number</button>
-                            <input
-                                type="text"
-                                placeholder="ID Number"
-                                value={idNum}
-                                readOnly
-                            />
-                            {warning && <span className="add-employee-warning">{warning}</span>}
-                            {successMessage && <span className="add-employee-success">{successMessage}</span>}
-                        </div>
-                        <div className="add-employee-form-column">
-                            <select
-                                value={userTeam}
-                                onChange={(e) => setUserTeam(e.target.value)}
-                                required
-                            >
-                                <option value="">Select Team</option>
-                                <option value="sales">Sales Team</option>
-                                <option value="marketing">Marketing Team</option>
-                                <option value="tech">Tech Team</option>
-                                <option value="software-development">Software Development Team</option>
-                                <option value="call-representative">Call Representative Team</option>
-                            </select>
                             <div className="add-employee-password-container">
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -231,6 +208,33 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>
                             </div>
+
+                            {warning && <span className="add-employee-warning">{warning}</span>}
+                            {successMessage && <span className="add-employee-success">{successMessage}</span>}
+                        </div>
+                        
+                        <div className="add-employee-form-column">
+                        <button type="button" onClick={generateIdNum}>Generate ID Number</button>
+                            <input
+                                type="text"
+                                placeholder="ID Number"
+                                value={idNum}
+                                readOnly
+                            />
+                            <select
+                                value={userTeam}
+                                onChange={(e) => setUserTeam(e.target.value)}
+                                required
+                            >
+                                <option value="">Select Team</option>
+                                <option value="sales">Sales Team</option>
+                                <option value="marketing">Marketing Team</option>
+                                <option value="tech">Tech Team</option>
+                                <option value="software-development">Software Development Team</option>
+                                <option value="call-representative">Call Representative Team</option>
+                            </select>
+
+
                             <button type="button" onClick={() => setIconPanelVisible(!iconPanelVisible)}>Choose Icon</button>
                             {iconPanelVisible && (
                                 <div className="add-employee-icon-panel">

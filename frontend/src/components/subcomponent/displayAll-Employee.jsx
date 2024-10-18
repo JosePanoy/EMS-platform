@@ -26,6 +26,9 @@ function DisplayAllEmployee() {
             }
         };
         fetchEmployees();
+
+        const intervalId = setInterval(fetchEmployees, 5000);
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {

@@ -2,7 +2,6 @@ import { useState } from "react";
 import "../../assets/css/subcomponent-css/addAdminModal.css";
 import Resizer from 'react-image-file-resizer';
 import { FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
-
 import boy1 from "../../assets/img/employee/boy1.png";
 import boy2 from "../../assets/img/employee/boy2.png";
 import boy3 from "../../assets/img/employee/boy3.png";
@@ -19,7 +18,6 @@ function AddAdminModal({ isOpen, onClose }) {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [userTeam, setUserTeam] = useState("");
     const [idNum, setIdNum] = useState("");
     const [selectedIcon, setSelectedIcon] = useState(null);
     const [imageUpload, setImageUpload] = useState(null);
@@ -78,7 +76,7 @@ function AddAdminModal({ isOpen, onClose }) {
         setWarning('');
         setSuccessMessage('');
 
-        if (!firstName || !lastName || !email || !address || !phone || !userTeam || !password || !confirmPassword) {
+        if (!firstName || !lastName || !email || !address || !phone || !password || !confirmPassword) {
             setWarning('Please fill in all required fields and select an icon.');
             setLoading(false);
             return;
@@ -198,29 +196,6 @@ function AddAdminModal({ isOpen, onClose }) {
                             <div className="add-admin-password-container">
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Confirm Password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                                <button style={{ background: 'none', border: 'none', color: '#00887A' }} className="add-admin-password-toggle" type="button" onClick={togglePasswordVisibility}>
-                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                </button>
-                            </div>
-                            {warning && <span style={{ color: 'red', textAlign: 'center', display: 'block' }}>{warning}</span>}
-                            {successMessage && <span style={{ color: 'green', textAlign: 'center', display: 'block' }}>{successMessage}</span>}
-                        </div>
-                        <div className="add-admin-form-column">
-                        <button type="button" onClick={generateIdNum}>Generate ID Number</button>
-                            <input
-                                type="text"
-                                placeholder="ID Number"
-                                value={idNum}
-                                readOnly
-                            />
-                            <div className="add-admin-password-container">
-                                <input
-                                    type={showPassword ? "text" : "password"}
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -230,7 +205,27 @@ function AddAdminModal({ isOpen, onClose }) {
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>
                             </div>
-
+                            <div className="add-admin-password-container">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                                <button style={{ background: 'none', border: 'none', color: '#00887A' }} className="add-admin-password-toggle" type="button" onClick={togglePasswordVisibility}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="add-admin-form-column">
+                            <button type="button" onClick={generateIdNum}>Generate ID Number</button>
+                            <input
+                                type="text"
+                                placeholder="ID Number"
+                                value={idNum}
+                                readOnly
+                            />
                             <button type="button" onClick={() => setIconPanelVisible(!iconPanelVisible)}>Choose Icon</button>
                             {iconPanelVisible && (
                                 <div className="add-admin-icon-panel">
@@ -258,7 +253,9 @@ function AddAdminModal({ isOpen, onClose }) {
                             )}
                         </div>
                     </div>
-                    <button style={{cursor: 'pointer'}} type="submit" disabled={loading}>{loading ? "Adding..." : "Add Admin"}</button>
+                    <button style={{ cursor: 'pointer' }} type="submit" disabled={loading}>{loading ? "Adding..." : "Add Admin"}</button>
+                    {warning && <span style={{ color: 'red', textAlign: 'center', display: 'block', marginTop: '5px', fontSize: '0.8rem', fontWeight: '700' }}>{warning}</span>}
+                    {successMessage && <span style={{ color: 'green', textAlign: 'center', display: 'block', marginTop: '5px', fontSize: '0.8rem', fontWeight: '700' }}>{successMessage}</span>}
                 </form>
             </div>
         </div>

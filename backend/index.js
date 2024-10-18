@@ -1,4 +1,3 @@
-// index.js
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -13,7 +12,7 @@ const PORT = process.env.PORT || 7000;
 const MONGOURL = process.env.MONGOURL;
 
 app.use(cors({ origin: 'http://localhost:5173' }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); 
 app.use('/api/admin', adminRoutes);
 app.use('/api/employee', employeeRoutes);
 
@@ -25,4 +24,3 @@ mongoose.connect(MONGOURL)
         });
     })
     .catch((error) => console.log(error));
-

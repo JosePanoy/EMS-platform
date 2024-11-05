@@ -13,8 +13,8 @@ const MONGOURL = process.env.MONGOURL;
 
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json({ limit: '10mb' })); 
-app.use('/api/admin', adminRoutes);
-app.use('/api/employee', employeeRoutes);
+app.use('/ems/admin', adminRoutes);
+app.use('/ems/employee', employeeRoutes);
 
 mongoose.connect(MONGOURL)
     .then(() => {

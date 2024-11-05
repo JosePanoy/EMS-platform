@@ -114,7 +114,7 @@ function TempSignIn() {
         };
 
         try {
-            const endpoint = userTeam === 'admin' ? 'http://localhost:8000/api/admin' : 'http://localhost:8000/api/employee';
+            const endpoint = userTeam === 'admin' ? 'http://localhost:8000/ems/admin' : 'http://localhost:8000/ems/employee';
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {

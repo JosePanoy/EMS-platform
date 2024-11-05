@@ -17,7 +17,7 @@ function EmployeeSlider() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            navigate(current === 0 ? "/admin-dashboard" : "/employee-dashboard");
+            navigate(current === 0 ? "/admin" : "/employee-dashboard");
         }
     }, [navigate, current]);
 
@@ -62,7 +62,7 @@ function EmployeeSlider() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:8000/api/${role}/login`, {
+            const response = await fetch(`http://localhost:8000/ems/${role}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idNum: idNumber, password })

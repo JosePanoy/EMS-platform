@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { FaEllipsisV, FaPlus, FaTrash } from 'react-icons/fa';
 import AddEmployeeModal from './addEmployeeModal';
+import UpdateEmployeeModal from "../subcomponent/UpdateEmployee-Modal";
 import "../../assets/css/subcomponent-css/displayAll-Employee.css";
 
 function DisplayAllEmployee() {
@@ -13,12 +14,13 @@ function DisplayAllEmployee() {
     const [searchTerm, setSearchTerm] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [addEmployeeModalVisible, setAddEmployeeModalVisible] = useState(false);
+    const [updateEmployeeModalVisible, setUpdateEmployeeModalVisible] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/employee');
+                const response = await axios.get('http://localhost:8000/ems/employee');
                 setEmployees(response.data);
                 setFilteredEmployees(response.data);
             } catch (error) {
@@ -40,7 +42,12 @@ function DisplayAllEmployee() {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (menuVisible && menuRef.current && !menuRef.current.contains(event.target)) {
+            if (
+                menuVisible && 
+                menuRef.current && 
+                !menuRef.current.contains(event.target) && 
+                !event.target.closest('.update-employee-modal') // Prevent closing when clicking inside the modal
+            ) {
                 setMenuVisible(false);
                 setSelectedEmployee(null);
             }
@@ -50,7 +57,7 @@ function DisplayAllEmployee() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [menuVisible]);
-
+    
     const handleMenuClick = (employee) => {
         setSelectedEmployee(employee);
         setMenuVisible(!menuVisible);
@@ -80,7 +87,7 @@ function DisplayAllEmployee() {
     const handleConfirmDelete = async () => {
         try {
             const idsToDelete = selectedEmployeeIds.length > 0 ? selectedEmployeeIds : [selectedEmployee._id];
-            await axios.delete('http://localhost:8000/api/employee', {
+            await axios.delete('http://localhost:8000/ems/employee', {
                 data: { ids: idsToDelete }
             });
             const updatedEmployees = employees.filter(emp => !idsToDelete.includes(emp._id));
@@ -97,6 +104,11 @@ function DisplayAllEmployee() {
     const handleEmployeeAdded = (newEmployee) => {
         setEmployees(prev => [...prev, newEmployee]);
         setFilteredEmployees(prev => [...prev, newEmployee]);
+    };
+
+    const handleUpdateEmployee = (employee) => {
+        setSelectedEmployee(employee);
+        setUpdateEmployeeModalVisible(true);
     };
 
     return (
@@ -165,7 +177,7 @@ function DisplayAllEmployee() {
                                         {menuVisible && selectedEmployee === employee && (
                                             <div className="menu-panel" ref={menuRef}>
                                                 <div onClick={() => alert("View Profile")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>View Profile</div>
-                                                <div onClick={() => alert("Update")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Update</div>
+                                                <div onClick={() => handleUpdateEmployee(employee)} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Update</div>
                                                 <div onClick={handleMenuDeleteClick} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Delete</div>
                                             </div>
                                         )}
@@ -211,6 +223,13 @@ function DisplayAllEmployee() {
                     isOpen={addEmployeeModalVisible} 
                     onClose={() => setAddEmployeeModalVisible(false)} 
                     onEmployeeAdded={handleEmployeeAdded} 
+                />
+            )}
+            {updateEmployeeModalVisible && selectedEmployee && (
+                <UpdateEmployeeModal 
+                    isOpen={updateEmployeeModalVisible}
+                    onClose={() => setUpdateEmployeeModalVisible(false)}
+                    employeeData={selectedEmployee}
                 />
             )}
         </div>

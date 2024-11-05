@@ -88,3 +88,46 @@ export const deleteEmployees = async (req, res) => {
         return res.status(500).json({ message: 'Error deleting employees', error });
     }
 };
+
+
+// get all numbers of employees
+
+export const getEmployeeCount = async(req,res) => {
+    try {
+        const employeeCount = await Employee.countDocuments();
+        return res.status(200).json({employeeCount});
+    } catch (error) {
+        return res.status(500).json({message : 'Error fetching number of employees', error})
+    }
+}
+
+// for update specific user
+
+export const updateEmployee = async (req, res) => {
+    const { firstName, lastName, email, address, phoneNumber, employeeId } = req.body;
+
+    try {
+        const employee = await Employee.findById(employeeId);
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+
+        const existingEmployee = await Employee.findOne({ email });
+        if (existingEmployee && existingEmployee._id.toString() !== employeeId) {
+            return res.status(400).json({ message: 'Email already in use' });
+        }
+
+        employee.firstName = firstName || employee.firstName;
+        employee.lastName = lastName || employee.lastName;
+        employee.email = email || employee.email;
+        employee.address = address || employee.address;
+        employee.phoneNumber = phoneNumber || employee.phoneNumber;
+
+        await employee.save();
+
+        return res.status(200).json({ message: 'Employee updated successfully', employee });
+    } catch (error) {
+        console.error("Error updating employee:", error);
+        return res.status(500).json({ message: 'Error updating employee', error });
+    }
+};

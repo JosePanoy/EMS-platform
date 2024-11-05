@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { FaEllipsisV, FaPlus, FaTrash } from 'react-icons/fa';
 import AddAdminModal from './addAdminModal';
+import UpdateAdminModal from "../subcomponent/UpdateAdmin-Modal";
 import "../../assets/css/subcomponent-css/displayAll-Admin.css";
 
 function DisplayAllAdmin() {
@@ -13,12 +14,13 @@ function DisplayAllAdmin() {
     const [searchTerm, setSearchTerm] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [addAdminModalVisible, setAddAdminModalVisible] = useState(false);
+    const [updateAdminModalVisible, setUpdateAdminModalVisible] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
         const fetchAdmins = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/admin');
+                const response = await axios.get('http://localhost:8000/ems/admin');
                 setAdmins(response.data);
                 setFilteredAdmins(response.data);
             } catch (error) {
@@ -80,7 +82,7 @@ function DisplayAllAdmin() {
     const handleConfirmDelete = async () => {
         const idsToDelete = selectedAdminIds.length > 0 ? selectedAdminIds : [selectedAdmin._id];
         try {
-            await axios.delete('http://localhost:8000/api/admin', {
+            await axios.delete('http://localhost:8000/ems/admin', {
                 data: { ids: idsToDelete }
             });
             const updatedAdmins = admins.filter(admin => !idsToDelete.includes(admin._id));
@@ -97,6 +99,11 @@ function DisplayAllAdmin() {
     const handleAdminAdded = (newAdmin) => {
         setAdmins(prev => [...prev, newAdmin]);
         setFilteredAdmins(prev => [...prev, newAdmin]);
+    };
+
+    const handleUpdateAdmin = (admin) => {
+        setSelectedAdmin(admin);
+        setUpdateAdminModalVisible(true);
     };
 
     return (
@@ -165,7 +172,7 @@ function DisplayAllAdmin() {
                                         {menuVisible && selectedAdmin === admin && (
                                             <div className="menu-panel" ref={menuRef}>
                                                 <div onClick={() => alert("View Profile")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>View Profile</div>
-                                                <div onClick={() => alert("Update")} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Update</div>
+                                                <div onClick={() => handleUpdateAdmin(admin)} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Update</div>
                                                 <div onClick={handleMenuDeleteClick} style={{ cursor: 'pointer', marginBottom: '5px', fontSize: '0.9rem' }}>Delete</div>
                                             </div>
                                         )}
@@ -211,6 +218,13 @@ function DisplayAllAdmin() {
                     isOpen={addAdminModalVisible} 
                     onClose={() => setAddAdminModalVisible(false)} 
                     onAdminAdded={handleAdminAdded} 
+                />
+            )}
+            {updateAdminModalVisible && selectedAdmin && (
+                <UpdateAdminModal 
+                    isOpen={updateAdminModalVisible}
+                    onClose={() => setUpdateAdminModalVisible(false)}
+                    adminData={selectedAdmin}
                 />
             )}
         </div>

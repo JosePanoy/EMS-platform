@@ -97,18 +97,18 @@ export const getAdminCounts = async (req, res) => {
 
 // for update the admins data
 
-export const updateAdmin = async (res,req) => {
-    const {firstName, lastName, email, address, phoneNumber, adminId} = req.body; 
-    
+export const updateAdmin = async (req, res) => {
+    const { firstName, lastName, email, address, phoneNumber, adminId } = req.body;
+
     try {
         const admin = await Admin.findById(adminId);
         if (!admin) {
-            return res.status(404).json({ message : 'Admin not found'})
+            return res.status(404).json({ message: 'Admin not found' });
         }
 
         const existingAdmin = await Admin.findOne({ email });
         if (existingAdmin && existingAdmin._id.toString() !== adminId) {
-            return res.status(200).json({ message: 'Email already in use' });
+            return res.status(400).json({ message: 'Email already in use' });
         }
 
         admin.firstName = firstName || admin.firstName;
@@ -119,9 +119,15 @@ export const updateAdmin = async (res,req) => {
 
         await admin.save();
 
-        return res.status(200).json({ message: 'Admin updated Successfully', admin});
+        return res.status(200).json({
+            message: 'Admin updated successfully',
+            admin,
+        });
     } catch (error) {
-        console.error("Error updating employee:", error);
-        return res.status(500).json({ message: 'Error updating employee', error });
+        console.error("Error updating admin:", error);
+        return res.status(500).json({
+            message: 'Error updating admin',
+            error: error.message,
+        });
     }
-}
+};

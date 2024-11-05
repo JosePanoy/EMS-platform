@@ -16,6 +16,7 @@ function DisplayAllAdmin() {
     const [addAdminModalVisible, setAddAdminModalVisible] = useState(false);
     const [updateAdminModalVisible, setUpdateAdminModalVisible] = useState(false);
     const menuRef = useRef(null);
+    const modalRef = useRef(null);
 
     useEffect(() => {
         const fetchAdmins = async () => {
@@ -42,16 +43,18 @@ function DisplayAllAdmin() {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (menuVisible && menuRef.current && !menuRef.current.contains(event.target)) {
+            if (menuVisible && menuRef.current && !menuRef.current.contains(event.target) && modalRef.current && !modalRef.current.contains(event.target)) {
                 setMenuVisible(false);
                 setSelectedAdmin(null);
             }
         };
+    
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [menuVisible]);
+    
 
     const handleMenuClick = (admin) => {
         setSelectedAdmin(admin);
@@ -184,7 +187,7 @@ function DisplayAllAdmin() {
                 </table>
             </div>
             {modalVisible && (
-                <div className="modal-overlay">
+                <div className="modal-overlay" ref={modalRef}>
                     <div className="modal-content">
                         <h3>Confirm Deletion</h3>
                         <p>Are you sure you want to delete the following admin(s)?</p>

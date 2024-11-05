@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import "../../assets/css/subcomponent-css/UpdateAdmin-Modal.css";  
+import "../../assets/css/subcomponent-css/UpdateAdmin-Modal.css";
 
 function UpdateAdminModal({ isOpen, onClose, adminData, onUpdateSuccess }) {
     const [admin, setAdmin] = useState({ ...adminData });
     const [isSaving, setIsSaving] = useState(false);
+    const modalRef = useRef(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -16,19 +17,20 @@ function UpdateAdminModal({ isOpen, onClose, adminData, onUpdateSuccess }) {
 
     const handleSave = async () => {
         setIsSaving(true);
-    
         let updateError = false;
         let updateSuccess = false;
-    
+
         try {
             const response = await axios.put('http://localhost:8000/ems/admin/update', {
                 ...admin,
                 adminId: admin._id.toString(),
             });
-    
+
             if (response.status === 200) {
                 updateSuccess = true;
-                onUpdateSuccess(response.data);
+                if (typeof onUpdateSuccess === 'function') {
+                    onUpdateSuccess(response.data);
+                }
             } else {
                 updateError = true;
             }
@@ -37,7 +39,7 @@ function UpdateAdminModal({ isOpen, onClose, adminData, onUpdateSuccess }) {
             updateError = true;
         } finally {
             setIsSaving(false);
-    
+
             if (updateSuccess) {
                 alert('Admin updated successfully!');
             } else if (updateError) {
@@ -45,22 +47,35 @@ function UpdateAdminModal({ isOpen, onClose, adminData, onUpdateSuccess }) {
             }
         }
     };
-    
+
     const handleClose = () => {
         onClose();
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                event.stopPropagation();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
-    const handleModalClick = (e) => {
-        e.stopPropagation();  
-    };
-
     return (
-        <div className="update-admin-modal-overlay" onClick={handleClose}>
-            <div className="update-admin-modal" onClick={handleModalClick}>
+        <div className="update-admin-modal-overlay">
+            <div className="update-admin-modal" ref={modalRef}>
                 <h2 className="update-admin-modal-title">Update Admin</h2>
-
                 <form className="update-admin-form" onSubmit={(e) => e.preventDefault()}>
                     <div className="update-admin-form-group">
                         <label htmlFor="firstName" className="update-admin-form-label">First Name</label>

@@ -12,6 +12,7 @@ import UserManagement from './components/adminpagescomponent/user-management';
 import AttendanceLeaveManagement from './components/adminpagescomponent/attendance-leave';
 import PerformanceOverview from './components/adminpagescomponent/performance-overview';
 import MessagingNotification from './components/adminpagescomponent/messaging-notification';
+import Departments from './components/adminpagescomponent/deparments';
 
 
 const root = createRoot(document.getElementById('root'));
@@ -26,6 +27,7 @@ root.render(
           <Route path="user-management" element={<UserManagement />} />
           <Route path="attendance-leave" element={<AttendanceLeaveManagement />} />
           <Route path="performance-overview" element={<PerformanceOverview />} />
+          <Route path="departments" element={<Departments />} />
           <Route path="messaging-notification" element={<MessagingNotification />} />
           
           <Route path="overview" element={<DashboardOverview />} />

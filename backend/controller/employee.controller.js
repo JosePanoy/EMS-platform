@@ -131,3 +131,47 @@ export const updateEmployee = async (req, res) => {
         return res.status(500).json({ message: 'Error updating employee', error });
     }
 };
+
+
+// count employee in each depratment
+
+
+export const getDepartmentEmployeeCount = async (req, res) => {
+    try {
+        const departmentCounts = await Employee.aggregate([
+            {
+                $group: {
+                    _id: "$userTeam", 
+                    count: { $sum: 1 } 
+                }
+            }
+        ]);
+
+        const formattedCounts = departmentCounts.map(department => ({
+            department: department._id,
+            count: department.count
+        }));
+
+        return res.status(200).json(formattedCounts);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error counting employees by department', error });
+    }
+};
+
+
+// getting names in specific deaprtment
+export const getEmployeesByDepartment = async (req, res) => {
+    const { department } = req.params;
+
+    try {
+        const employees = await Employee.find({ userTeam: department });
+
+        if (employees.length === 0) {
+            return res.status(404).json({ message: 'No employees found in this department' });
+        }
+
+        return res.status(200).json(employees);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching employees', error });
+    }
+};

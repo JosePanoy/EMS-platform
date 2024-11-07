@@ -10,6 +10,7 @@ import PerformanceIcon from "../../assets/img/performance-overview.png";
 import InternalMessaging from "../../assets/img/internal-messaging.png";
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingGif from "../../assets/img/gif/loading.gif";
+import DepartmentLogo from "../../assets/img/departments.png"
 
 function AdminDashNavbar({ admin }) {
     const [currentTime, setCurrentTime] = useState('');
@@ -82,6 +83,11 @@ function AdminDashNavbar({ admin }) {
                     <img src={PerformanceIcon} alt="Performance Overview" className="icon" />
                     <span className="tooltip">Performance Overview</span>
                 </Link>
+                <Link to="/admin/departments" className="icon-wrapper">
+                    <img src={DepartmentLogo} alt="Departments" className="icon" />
+                    <span className="tooltip">Departments</span>
+                </Link>
+                
                 <Link to="/admin/messaging-notification" className="icon-wrapper">
                     <img src={InternalMessaging} alt="Internal Messaging" className="icon" />
                     <span className="tooltip">Internal Messaging</span>
@@ -92,6 +98,7 @@ function AdminDashNavbar({ admin }) {
                 <Link to="/admin/overview" className="nav-link">Dashboard Overview</Link>
                 <Link to="/admin/user-management" className="nav-link">User Management</Link>
                 <Link to="/admin/performance-overview" className="nav-link">Performance Overview</Link>
+                <Link to="/admin/departments" className="nav-link">Departments</Link>
                 <Link to="/admin/attendance-leave" className="nav-link">Attendance & Leave Management</Link>
                 <Link to="/admin/messaging-notification" className="nav-link">Internal Messaging & Notifications</Link>
             </div>
@@ -113,6 +120,10 @@ function AdminDashNavbar({ admin }) {
                 <Link to="/admin/performance-overview" className="hidden-panel-button">
                     <img src={PerformanceIcon} alt="Performance Overview" className="button-icon" />
                     Performance Overview
+                </Link>
+                <Link to="/admin/departments" className="hidden-panel-button">
+                    <img src={DepartmentLogo} alt="Departments" className="button-icon" />
+                    Departments
                 </Link>
                 <Link to="/admin/messaging-notification" className="hidden-panel-button">
                     <img src={InternalMessaging} alt="Internal Messaging" className="button-icon" />

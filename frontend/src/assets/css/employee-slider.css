@@ -123,13 +123,25 @@
     width: 500px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .unique-close {
-    float: right;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     font-size: 24px;
     cursor: pointer;
+    background: none;
+    border: none;
+    color: #333;
+    transition: color 0.3s;
 }
+
+.unique-close:hover {
+    color: red;
+}
+
 
 .unique-modal-content input {
     width: calc(100% - 20px);
@@ -216,7 +228,7 @@
 }
 
 .loading-modal img {
-    width: 150px;
+    width: 70px;
     height: auto;
 }
 

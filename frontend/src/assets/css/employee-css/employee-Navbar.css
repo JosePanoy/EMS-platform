@@ -44,3 +44,102 @@
 .logout-icon {
     width: 20px;
 }
+
+/***for modal***/
+.employee-navbar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.employee-navbar-modal-content {
+    background-color: white;
+    padding: 30px 40px; 
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+    transition: transform 0.3s ease-in-out;
+    transform: scale(0.95);
+}
+
+.employee-navbar-modal-content p {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.employee-navbar-modal-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.employee-navbar-modal-actions button {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100px;
+}
+
+.employee-navbar-modal-actions button:first-child {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.employee-navbar-modal-actions button:first-child:hover {
+    background-color: #bdbdbd;
+    transform: scale(1.05);
+}
+
+.employee-navbar-modal-actions button:last-child {
+    background-color: #4caf50;
+    color: white;
+}
+
+.employee-navbar-modal-actions button:last-child:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.employee-navbar-modal.fade-in {
+    opacity: 1;
+}
+
+.employee-navbar-modal-content.fade-in {
+    transform: scale(1);
+}
+
+
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-gif {
+    width: 150px;
+    height: 50px;
+    display: block;
+    margin: 0 auto;
+}
+
+.loading-container p {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: default;
+}

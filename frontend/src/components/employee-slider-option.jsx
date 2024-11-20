@@ -12,6 +12,7 @@ function EmployeeSlider() {
     const [idNum, setIdNum] = useState(["", "", ""]);
     const [password, setPassword] = useState("");
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
+    const passwordInputRef = useRef(null);
     const navigate = useNavigate(); 
 
     useEffect(() => {
@@ -54,6 +55,10 @@ function EmployeeSlider() {
         if (numericValue.length === 3 && index < idNum.length - 1) {
             inputRefs.current[index + 1].current.focus();
         }
+
+        if (newIdNum.every(segment => segment.length === 3)) {
+            passwordInputRef.current.focus();
+        }
     };
 
     const handleLogin = async () => {
@@ -89,6 +94,12 @@ function EmployeeSlider() {
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
+
     return (
         <div className="unique-slider-container">
             <h2 className="slider-title">Type Of Employee</h2>
@@ -112,6 +123,7 @@ function EmployeeSlider() {
             {isModalOpen && (
                 <div className="unique-modal-login-container">
                     <div className="unique-modal-content">
+                        <button className="unique-close" onClick={closeModal}>×</button>
                         {isLoading ? (
                             <div className="loading-modal">
                                 <img src={LoadingGif} alt="Loading..." />
@@ -137,10 +149,12 @@ function EmployeeSlider() {
                                     ))}
                                 </div>
                                 <input
+                                    ref={passwordInputRef}
                                     type="password"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    onKeyDown={handleKeyPress}
                                 />
                                 <button className="unique-modal-login" onClick={handleLogin}>Log In</button>
                             </>

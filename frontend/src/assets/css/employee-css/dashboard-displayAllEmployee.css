@@ -1,0 +1,108 @@
+.dashboard-grid-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 85%;
+    margin: 10px 50px 50px auto;
+}
+
+.dashboard-tile {
+    position: relative;
+    background-color: rgba(56, 116, 120, 0.8);
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 200px;
+    max-width: 180px;
+}
+
+.dashboard-tile:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-tile-image {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-tile-image img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.dashboard-tile-info {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.dashboard-tile-name {
+    font-size: 1rem;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+
+}
+
+.dashboard-tile-department {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 5px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    cursor: default;
+    color: #243642;
+}
+
+.dashboard-tile-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: default;
+    color: #243642;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #54f000;
+    margin-right: 5px;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-grid-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-grid-container {
+        grid-template-columns: 1fr;
+    }
+}

@@ -4,6 +4,7 @@ import EmployeeMainBar from './employeesubcomponent/employee-mainbar';
 import EmployeeSidePanel from './employeesubcomponent/employee-sidepanel';
 import EmployeeNavbar from './employeesubcomponent/employee-Navbar';
 
+
 function EmployeeMainDashboard() {
     const navigate = useNavigate();
 
@@ -27,10 +28,12 @@ function EmployeeMainDashboard() {
             <EmployeeNavbar handleLogout={handleLogout} employee={employee} />
             <EmployeeMainBar />
             <EmployeeSidePanel />
-            <h1 style={{ textAlign: 'center', margin: '50px 0 auto' }}>
+            <h1 style={{ textAlign: 'center', margin: '10px 0 auto',fontSize: '1.7rem', cursor: 'default' }}>
                 Employee Main Dashboard
             </h1>
-            {employee && <h2 style={{ textAlign: 'center' }}>{`Welcome, ${employee.firstName} ${employee.lastName} ${employee.idNum}`}</h2>}
+
+ 
+  
             <Outlet context={employee} />
         </>
     );

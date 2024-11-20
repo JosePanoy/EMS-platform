@@ -17,7 +17,8 @@ function EmployeeMainBar({ handleLogout }) {
 
     return (
         <div className="employee-mainbar-navbar">
-            <Link  to="/employee"  className="employee-mainbar-nav-button">Dashboard</Link>
+            <Link  to="/employee"  className="employee-mainbar-nav-button">Main Dashboard</Link>
+            <Link  to="overview"  className="employee-mainbar-nav-button">Overview</Link>
             <Link to="attendance" className="employee-mainbar-nav-button">Attendance</Link>
             <Link to="task" className="employee-mainbar-nav-button">Tasks/Projects</Link>
             <Link to="leave" className="employee-mainbar-nav-button">Leave</Link>

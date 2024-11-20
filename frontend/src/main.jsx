@@ -14,6 +14,7 @@ import MessagingNotification from './components/adminpagescomponent/messaging-no
 import Departments from './components/adminpagescomponent/deparments';
 
 // Employee pages
+import DashboardDisplayAllEmployee from './components/employeepagescomponent/employee-maindash';
 import EmployeeAttendance from "./components/employeepagescomponent/employee-attendance";
 import EmployeeLeave from './components/employeepagescomponent/employee-leave';
 import EmployeeTask from './components/employeepagescomponent/employee-tasks';
@@ -41,6 +42,7 @@ root.render(
 
         {/* Employee routes */}
         <Route path="/employee" element={<EmployeeMainDashboard />}>
+          <Route path="overview" element={<DashboardDisplayAllEmployee />} />
           <Route path="attendance" element={<EmployeeAttendance />} />
           <Route path="task" element={<EmployeeTask />} />
           <Route path="leave" element={<EmployeeLeave />} />

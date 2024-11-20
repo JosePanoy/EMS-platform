@@ -2,6 +2,7 @@ import React from "react";
 import "../../assets/css/employee-css/employee-sidepanel.css";
 import { Link } from 'react-router-dom';
 
+import OverviewIcon from "../../assets/img/employee-department/overview.png"
 import DashboardIcon from "../../assets/img/employee-department/dashboard.png";
 import AttendanceIcon from "../../assets/img/employee-department/attendance.png";
 import TaskIcon from "../../assets/img/employee-department/task.png";
@@ -13,7 +14,11 @@ function EmployeeSidePanel() {
         <div className="employee-sidepanel">
             <Link to="/employee" className="employee-sidepanel-item">
                 <img src={DashboardIcon} alt="Department" className="employee-sidepanel-icon" />
-                <span className="employee-sidepanel-text">Department</span>
+                <span className="employee-sidepanel-text">Main Dashboard</span>
+            </Link>
+            <Link to="overview" className="employee-sidepanel-item">
+                <img src={OverviewIcon} alt="Department" className="employee-sidepanel-icon" />
+                <span className="employee-sidepanel-text">Overview</span>
             </Link>
             <Link to="attendance" className="employee-sidepanel-item">
                 <img src={AttendanceIcon} alt="Attendance" className="employee-sidepanel-icon" />

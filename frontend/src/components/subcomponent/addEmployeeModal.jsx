@@ -110,7 +110,7 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
         };
 
         try {
-            const response = await fetch('http://localhost:8000/api/employee', {
+            const response = await fetch('http://localhost:8000/ems/employee', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -232,6 +232,7 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
                                 <option value="tech">Tech Team</option>
                                 <option value="software-development">Software Development Team</option>
                                 <option value="call-representative">Call Representative Team</option>
+                                <option value="maintainance">Maintainance Team</option>
                             </select>
 
 

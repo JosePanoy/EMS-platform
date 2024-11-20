@@ -7,6 +7,7 @@ import MarketingTeam from "../../assets/img/departments/marketing.png";
 import CallRepresentative from "../../assets/img/departments/call-representative.png";
 import TechTeam from "../../assets/img/departments/tech-team.png";
 import SoftwareDev from "../../assets/img/departments/software-dev.png";
+import MaintainanceTeam from "../../assets/img/departments/maintainance.png"
 
 function Departments() {
     const admin = useOutletContext();
@@ -16,6 +17,7 @@ function Departments() {
         tech: 0,
         softwareDevelopment: 0,
         callRepresentative: 0,
+        maintainance: 0,
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +36,7 @@ function Departments() {
                     tech: 0,
                     softwareDevelopment: 0,
                     callRepresentative: 0,
+                    maintainance: 0,
                 };
 
                 data.forEach(({ department, count }) => {
@@ -42,6 +45,7 @@ function Departments() {
                     if (department === 'tech') counts.tech = count;
                     if (department === 'software-development') counts.softwareDevelopment = count;
                     if (department === 'call-representative') counts.callRepresentative = count;
+                    if(department == 'maintainance') counts.maintainance = count;
                 });
 
                 setDepartmentCounts(counts);
@@ -116,11 +120,21 @@ function Departments() {
                         <p className="employee-count">{departmentCounts.tech}</p>
                     </div>
                 </div>
+                
                 <div className="department-box department-software-development" onClick={() => handleDepartmentClick('Software Development Team')}>
                     <img src={SoftwareDev} alt="Software Development Team" />
                     <div className="department-info">
                         <h3>Software Development Team</h3>
                         <p className="employee-count">{departmentCounts.softwareDevelopment}</p>
+                    </div>
+                </div>
+
+
+                <div className="department-box department-maintainance" onClick={() => handleDepartmentClick('Maintainance Team')}>
+                    <img src={MaintainanceTeam} alt="Maintainance Team" />
+                    <div className="department-info">
+                        <h3>Maintainance Crew</h3>
+                        <p className="employee-count">{departmentCounts.maintainance}</p>
                     </div>
                 </div>
             </div>

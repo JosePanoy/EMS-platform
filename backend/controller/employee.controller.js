@@ -135,7 +135,6 @@ export const updateEmployee = async (req, res) => {
 
 // count employee in each depratment
 
-
 export const getDepartmentEmployeeCount = async (req, res) => {
     try {
         const departmentCounts = await Employee.aggregate([

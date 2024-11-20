@@ -74,7 +74,7 @@ function EmployeeSlider() {
                 localStorage.setItem(role === "admin" ? 'admin' : 'employee', JSON.stringify(data.admin || data.employee));
                 setTimeout(() => {
                     closeModal();
-                    navigate(role === "admin" ? "/admin" : "/employee-dashboard");
+                    navigate(role === "admin" ? "/admin" : "/employee");
                 }, 3000);
             } else {
                 setTimeout(() => {

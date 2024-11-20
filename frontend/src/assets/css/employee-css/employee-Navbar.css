@@ -1,0 +1,46 @@
+.employee-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: hsl(0, 0%, 20%);
+    color: white;
+}
+
+.employee-id-container {
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: default;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.employee-time-container {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;  
+}
+
+.employee-time-logo {
+    width: 20px;
+    margin-right: 5px;
+}
+
+.employee-time {
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-indent: 5px;
+    cursor: default;
+}
+
+.logout-container {
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+.logout-icon {
+    width: 20px;
+}

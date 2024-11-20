@@ -9,7 +9,7 @@ function AdminMainDashboard() {
 
     useEffect(() => {
         if (!admin) {
-            navigate('/'); // Redirect if admin is not logged in
+            navigate('/');
         }
     }, [admin, navigate]);
 

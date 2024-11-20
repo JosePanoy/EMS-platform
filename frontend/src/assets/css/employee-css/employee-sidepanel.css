@@ -1,0 +1,46 @@
+.employee-sidepanel {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 60px;
+    background-color: #2c3e50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.employee-sidepanel-item {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.employee-sidepanel-item:hover .employee-sidepanel-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+.employee-sidepanel-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.employee-sidepanel-text {
+    position: absolute;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    visibility: hidden;
+    color: #2c2c2c;
+    font-size: 14px;
+    transition: opacity 0.3s, visibility 0.3s;
+}

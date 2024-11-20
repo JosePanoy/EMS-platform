@@ -1,4 +1,3 @@
-//main.jsx
 import React from 'react';
 import App from './App';
 import './index.css';
@@ -14,7 +13,13 @@ import PerformanceOverview from './components/adminpagescomponent/performance-ov
 import MessagingNotification from './components/adminpagescomponent/messaging-notification';
 import Departments from './components/adminpagescomponent/deparments';
 
+// Employee pages
+import EmployeeAttendance from "./components/employeepagescomponent/employee-attendance";
+import EmployeeLeave from './components/employeepagescomponent/employee-leave';
+import EmployeeTask from './components/employeepagescomponent/employee-tasks';
+import EmployeeProfile from './components/employeepagescomponent/employee-profile';
 
+// Main rendering logic
 const root = createRoot(document.getElementById('root'));
 
 root.render(
@@ -23,16 +28,24 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/tempsignin" element={<TempSignIn />} />
+
+        {/* Admin routes */}
         <Route path="/admin" element={<AdminMainDashboard />}>
           <Route path="user-management" element={<UserManagement />} />
           <Route path="attendance-leave" element={<AttendanceLeaveManagement />} />
           <Route path="performance-overview" element={<PerformanceOverview />} />
           <Route path="departments" element={<Departments />} />
           <Route path="messaging-notification" element={<MessagingNotification />} />
-          
           <Route path="overview" element={<DashboardOverview />} />
         </Route>
-        <Route path="/employee-dashboard" element={<EmployeeMainDashboard />} />
+
+        {/* Employee routes */}
+        <Route path="/employee" element={<EmployeeMainDashboard />}>
+          <Route path="attendance" element={<EmployeeAttendance />} />
+          <Route path="task" element={<EmployeeTask />} />
+          <Route path="leave" element={<EmployeeLeave />} />
+          <Route path="profile" element={<EmployeeProfile />} />
+        </Route>
       </Routes>
     </Router>
   </React.StrictMode>

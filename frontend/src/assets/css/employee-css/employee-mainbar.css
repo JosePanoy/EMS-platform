@@ -1,0 +1,67 @@
+.employee-mainbar-navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0;
+    width: 100%;
+    background-color: transparent;
+}
+
+.employee-mainbar-nav-button {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.logout-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.logout-button {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.employee-mainbar-time {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.employee-mainbar-time-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.employee-mainbar-time-text {
+    font-size: 0.8rem;
+    color: black;
+    font-weight: 700;
+    cursor: default;
+}
+
+.employee-mainbar-logout-icon {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 768px) {
+    .employee-mainbar-navbar {
+        justify-content: flex-start;
+    }
+
+    .employee-mainbar-nav-button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}

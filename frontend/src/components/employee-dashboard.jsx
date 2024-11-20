@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
+import EmployeeMainBar from './employeesubcomponent/employee-mainbar';
+import EmployeeSidePanel from './employeesubcomponent/employee-sidepanel';
+import EmployeeNavbar from './employeesubcomponent/employee-Navbar';
 
 function EmployeeMainDashboard() {
     const navigate = useNavigate();
@@ -14,23 +17,21 @@ function EmployeeMainDashboard() {
     const employee = JSON.parse(localStorage.getItem('employee'));
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); 
-        localStorage.removeItem('employee'); 
-        navigate('/'); 
+        localStorage.removeItem('token');
+        localStorage.removeItem('employee');
+        navigate('/');
     };
 
     return (
         <>
-            <h1 style={{ textAlign: 'center', margin: '100px 0 auto' }}>
+            <EmployeeNavbar handleLogout={handleLogout} employee={employee} />
+            <EmployeeMainBar />
+            <EmployeeSidePanel />
+            <h1 style={{ textAlign: 'center', margin: '50px 0 auto' }}>
                 Employee Main Dashboard
             </h1>
-            {employee && <h2 style={{ textAlign: 'center' }}>{`Welcome, ${employee.firstName} ${employee.lastName}`}</h2>}
-            <button style={{ display: 'block', margin: '0 auto' }} onClick={handleLogout}>
-                Logout
-            </button>
-
-
-            
+            {employee && <h2 style={{ textAlign: 'center' }}>{`Welcome, ${employee.firstName} ${employee.lastName} ${employee.idNum}`}</h2>}
+            <Outlet context={employee} />
         </>
     );
 }

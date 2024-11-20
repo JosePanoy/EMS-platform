@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import "../../assets/css/subpages-css/user-management.css"
 import DisplayAllAdmin from '../subcomponent/displayAll-Admin';
 import DisplayAllEmployee from '../subcomponent/displayAll-Employee';
+import ArrowUpButton from '../subcomponent/ArrowUpButton';
 
 function UserManagement() {
     const admin = useOutletContext();
@@ -16,6 +17,7 @@ function UserManagement() {
             <DisplayAllEmployee />
             <hr style={{ width: '60%', margin: '20px auto', border: '1px solid #ccc' }} />
             <DisplayAllAdmin />
+            <ArrowUpButton />
         </>
     );
 }

@@ -4,7 +4,6 @@
     margin-bottom: 20px;
     width: 50%;
     margin: 0 auto;
-
 }
 
 .employee-search-input {
@@ -30,27 +29,55 @@
     color: #243642;
     cursor: pointer;
     margin-left: 10px;
-    white-space: nowrap; 
-
+    white-space: nowrap;
 }
 
 .employee-sort-checkbox input {
     margin-right: 8px;
 }
 
+.employee-status-filter {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
 
+.employee-status-filter label {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-right: 15px;
+}
 
-.dashboard-grid-container {
+.employee-status-filter input {
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.employee-grid-container {
+    margin: 0 auto;
+    width: 80%;
+    padding: 5px;
+}
+
+.employee-grid-container h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.employee-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     padding: 10px;
     box-sizing: border-box;
     width: 85%;
-    margin: 10px 50px 50px auto;
+    margin: 0  auto;
+    margin-bottom: 20px;
 }
 
-.dashboard-tile {
+.employee-tile {
     position: relative;
     background-color: rgba(56, 116, 120, 0.8);
     border-radius: 12px;
@@ -65,26 +92,25 @@
     max-width: 180px;
 }
 
-.dashboard-tile:hover {
+.employee-tile:hover {
     transform: scale(1.05);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
-.dashboard-tile-image {
+.employee-tile-image {
     margin-bottom: 10px;
     display: flex;
     justify-content: center;
 }
 
-.dashboard-tile-image img {
+.employee-tile-image img {
     width: 90px;
     height: 90px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.dashboard-tile-info {
+.employee-tile-info {
     color: white;
     display: flex;
     flex-direction: column;
@@ -93,17 +119,16 @@
     flex-grow: 1;
 }
 
-.dashboard-tile-name {
+.employee-tile-name {
     font-size: 1rem;
     font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: default;
-
 }
 
-.dashboard-tile-department {
+.employee-tile-department {
     font-size: 0.8rem;
     font-weight: 600;
     margin: 5px 0;
@@ -115,7 +140,7 @@
     color: #243642;
 }
 
-.dashboard-tile-status {
+.employee-tile-status {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -133,21 +158,19 @@
 }
 
 @media (max-width: 1200px) {
-    .dashboard-grid-container {
+    .employee-grid {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 900px) {
-    .dashboard-grid-container {
+    .employee-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 600px) {
-    .dashboard-grid-container {
+    .employee-grid {
         grid-template-columns: 1fr;
     }
 }
-
-

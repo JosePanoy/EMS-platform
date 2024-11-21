@@ -41,19 +41,31 @@ export const createEmployee = async (req, res) => {
     }
 };
 
+
+/// for employee log in
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
     const employee = await Employee.findOne({ idNum });
+
     if (!employee) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
+
     const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
+
+    // Set isOnline to true
+    employee.isOnline = true;
+    await employee.save();
+
     const token = jwt.sign({ id: employee._id, role: 'employee' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
     res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };
+
+
 
 
 export const getAllEmployees = async (req, res) => {

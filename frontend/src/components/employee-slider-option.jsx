@@ -4,6 +4,7 @@ import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
 import EmployeeLogo from "../assets/img/employee.png";
 import LoadingGif from "../assets/img/gif/loading.gif";
+import io from 'socket.io-client';
 
 function EmployeeSlider() {
     const [current, setCurrent] = useState(0);
@@ -13,14 +14,28 @@ function EmployeeSlider() {
     const [password, setPassword] = useState("");
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
     const passwordInputRef = useRef(null);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const socket = useRef(io("http://localhost:7000")).current;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             navigate(current === 0 ? "/admin" : "/employee-dashboard");
         }
-    }, [navigate, current]);
+
+        socket.on('connect', () => {
+            console.log('Socket connected:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Socket disconnected');
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+        };
+    }, [navigate, current, socket]);
 
     const handlePrev = () => {
         setCurrent(current === 0 ? 1 : 0);
@@ -77,6 +92,7 @@ function EmployeeSlider() {
                 const data = await response.json();
                 localStorage.setItem('token', data.token);
                 localStorage.setItem(role === "admin" ? 'admin' : 'employee', JSON.stringify(data.admin || data.employee));
+                socket.emit('login', idNumber);
                 setTimeout(() => {
                     closeModal();
                     navigate(role === "admin" ? "/admin" : "/employee");

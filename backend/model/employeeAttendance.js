@@ -1,4 +1,5 @@
 // employeeAttendance.js
+// employeeAttendance.js
 import mongoose from 'mongoose';
 
 const EmployeeAttendanceSchema = new mongoose.Schema({
@@ -22,7 +23,7 @@ const EmployeeAttendanceSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Present', 'Absent'],
+        enum: ['Early Bird', 'Just In Time', 'In Time, Do Better', 'Late', 'Absent', 'Present'],
         default: 'Present'
     }
 }, {

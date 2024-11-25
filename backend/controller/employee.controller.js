@@ -46,8 +46,6 @@ export const createEmployee = async (req, res) => {
     }
 };
 
-
-
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
@@ -65,15 +63,38 @@ export const loginEmployee = async (req, res) => {
     const currentDate = new Date().toISOString().split('T')[0];
     const lastLoginDate = employee.lastLoginDate ? new Date(employee.lastLoginDate).toISOString().split('T')[0] : null;
 
-
     if (currentDate !== lastLoginDate) {
         try {
-       
+            const [setHours, setMinutes] = employee.loginTime.split(":");
+            const period = employee.loginTime.split(" ")[1];
+            const actualHours = period === "PM" ? parseInt(setHours) + 12 : parseInt(setHours);
+            const setLoginTime = new Date();
+            setLoginTime.setHours(actualHours, parseInt(setMinutes), 0, 0);
+
+            const actualLoginTime = new Date();
+            const actualLoginTimeString = actualLoginTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);  // Difference in minutes
+
+            let status = 'Present';
+
+            if (timeDifference <= -15) {
+                status = 'Early Bird';
+            } else if (timeDifference > -15 && timeDifference <= -5) {
+                status = 'Just In Time';
+            } else if (timeDifference >= 0 && timeDifference <= 5) {
+                status = 'In Time, Do Better';
+            } else if (timeDifference > 5 && timeDifference <= 15) {
+                status = 'Late';
+            } else if (timeDifference > 15 && timeDifference <= 30) {
+                status = 'Absent';
+            }
+
             const newAttendance = new EmployeeAttendance({
                 employeeId: employee._id,
                 date: new Date(),
-                loginTime: moment().format("h:mm A"), 
-                status: 'Present',
+                loginTime: actualLoginTimeString,
+                status,
             });
 
             await newAttendance.save();
@@ -93,7 +114,6 @@ export const loginEmployee = async (req, res) => {
 
     return res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };
-
 
 
 export const deleteEmployees = async (req, res) => {

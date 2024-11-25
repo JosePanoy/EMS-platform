@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import adminRoutes from './routes/admin.routes.js'; 
 import employeeRoutes from './routes/employee.routes.js';
-import http from 'http';  // Import http module
-import { Server } from 'socket.io';  // Import the 'Server' class from socket.io
+import http from 'http'; 
+import { Server } from 'socket.io'; 
 
 const app = express();
 dotenv.config();
@@ -15,10 +15,10 @@ const MONGOURL = process.env.MONGOURL;
 
 const server = http.createServer(app);
 
-// Add CORS configuration for Socket.IO here
+
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // frontend URL
+    origin: 'http://localhost:5173', 
     methods: ['GET', 'POST']
   }
 });

@@ -31,8 +31,9 @@ export const createEmployee = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newLoginTime = loginTime ? moment(loginTime, ["h:mm A", "HH:mm"]).toDate() : new Date(); 
-        const newLogoutTime = logoutTime ? moment(logoutTime, ["h:mm A", "HH:mm"]).toDate() : new Date(); 
+        // Format loginTime and logoutTime to only store time (e.g., 8:00 AM)
+        const newLoginTime = loginTime ? moment(loginTime, ["h:mm A", "HH:mm"]).format("h:mm A") : "8:00 AM"; // Default to 8:00 AM if not provided
+        const newLogoutTime = logoutTime ? moment(logoutTime, ["h:mm A", "HH:mm"]).format("h:mm A") : "5:00 PM"; // Default to 5:00 PM if not provided
 
         const newEmployee = new Employee({
             firstName,
@@ -64,6 +65,7 @@ export const createEmployee = async (req, res) => {
         return res.status(500).json({ message: 'Error registering employee', error });
     }
 };
+
 
 
 

@@ -15,7 +15,7 @@ function EmployeeSlider() {
     const inputRefs = useRef([useRef(null), useRef(null), useRef(null)]);
     const passwordInputRef = useRef(null);
     const navigate = useNavigate();
-    const socket = useRef(io("http://localhost:7000")).current;
+    const socket = useRef(io("http://localhost:8000")).current;
 
     useEffect(() => {
         const token = localStorage.getItem('token');

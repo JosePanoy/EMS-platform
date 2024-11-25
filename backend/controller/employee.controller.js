@@ -4,9 +4,24 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcrypt'; 
 import jwt from 'jsonwebtoken'; 
+import moment from 'moment';
+
 
 export const createEmployee = async (req, res) => {
-    const { firstName, lastName, email, address, phoneNumber, password, idNum, userTeam, icon, imageUpload } = req.body;
+    const { 
+        firstName, 
+        lastName, 
+        email, 
+        address, 
+        phoneNumber, 
+        password, 
+        idNum, 
+        userTeam, 
+        icon, 
+        imageUpload,
+        loginTime,  
+        logoutTime
+    } = req.body;
 
     try {
         const existingEmployee = await Employee.findOne({ email });
@@ -15,6 +30,10 @@ export const createEmployee = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newLoginTime = loginTime ? moment(loginTime, ["h:mm A", "HH:mm"]).toDate() : new Date(); 
+        const newLogoutTime = logoutTime ? moment(logoutTime, ["h:mm A", "HH:mm"]).toDate() : new Date(); 
+
         const newEmployee = new Employee({
             firstName,
             lastName,
@@ -24,7 +43,10 @@ export const createEmployee = async (req, res) => {
             password: hashedPassword,
             idNum,
             userTeam,
-            icon
+            icon,
+            loginTime: newLoginTime,  
+            logoutTime: newLogoutTime, 
+            isOnline: false,  
         });
 
         if (imageUpload) {
@@ -35,11 +57,14 @@ export const createEmployee = async (req, res) => {
         }
 
         await newEmployee.save();
+
         return res.status(201).json({ message: 'Employee registered successfully', newEmployee });
+
     } catch (error) {
         return res.status(500).json({ message: 'Error registering employee', error });
     }
 };
+
 
 
 /// for employee log in

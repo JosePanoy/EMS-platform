@@ -9,6 +9,8 @@ import girl1 from "../../assets/img/employee/girl1.png";
 import girl2 from "../../assets/img/employee/girl2.png";
 import girl3 from "../../assets/img/employee/girl3.png";
 import SuperAdmin from "../../assets/img/employee/superadmin.png";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
     const [firstName, setFirstName] = useState("");
@@ -28,6 +30,8 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
     const [idGenerated, setIdGenerated] = useState(false);
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+    const [loginTime, setLoginTime] = useState(new Date());
+    const [logoutTime, setLogoutTime] = useState(new Date());
 
     const generateIdNum = () => {
         if (idGenerated) {
@@ -71,69 +75,77 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
         setShowPassword(!showPassword);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setWarning('');
-        setSuccessMessage('');
+    // Modify how you save loginTime and logoutTime
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setWarning('');
+    setSuccessMessage('');
 
-        if (!firstName || !lastName || !email || !address || !phone || !userTeam || !password || !confirmPassword) {
-            setWarning('Please fill in all required fields and select an icon.');
-            setLoading(false);
-            return;
-        }
+    if (!firstName || !lastName || !email || !address || !phone || !userTeam || !password || !confirmPassword) {
+        setWarning('Please fill in all required fields and select an icon.');
+        setLoading(false);
+        return;
+    }
 
-        if (password !== confirmPassword) {
-            setWarning('Passwords do not match.');
-            setLoading(false);
-            return;
-        }
+    if (password !== confirmPassword) {
+        setWarning('Passwords do not match.');
+        setLoading(false);
+        return;
+    }
 
-        const icon = imageUpload || selectedIcon;
+    const icon = imageUpload || selectedIcon;
 
-        if (!icon) {
-            setWarning('Please choose a profile icon or upload an image.');
-            setLoading(false);
-            return;
-        }
+    if (!icon) {
+        setWarning('Please choose a profile icon or upload an image.');
+        setLoading(false);
+        return;
+    }
 
-        const dataToSend = {
-            firstName,
-            lastName,
-            email,
-            address,
-            phoneNumber: phone,
-            userTeam,
-            password,
-            idNum,
-            icon
-        };
+    const loginTimeString = loginTime.toLocaleString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    const logoutTimeString = logoutTime.toLocaleString([], { hour: '2-digit', minute: '2-digit', hour12: true });
 
-        try {
-            const response = await fetch('http://localhost:8000/ems/employee', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataToSend),
-            });
-
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                throw new Error(errorResponse.message);
-            }
-
-            const newEmployee = await response.json();
-            onEmployeeAdded(newEmployee);
-            setSuccessMessage('Employee added successfully!');
-            setTimeout(onClose, 3000);
-        } catch (error) {
-            setWarning(error.message);
-            setTimeout(() => setWarning(''), 3000);
-        } finally {
-            setLoading(false);
-        }
+    const dataToSend = {
+        firstName,
+        lastName,
+        email,
+        address,
+        phoneNumber: phone,
+        userTeam,
+        password,
+        idNum,
+        icon,
+        loginTime: loginTimeString,  
+        logoutTime: logoutTimeString, 
     };
+
+    try {
+        const response = await fetch('http://localhost:8000/ems/employee', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+
+        const newEmployee = await response.json();
+        onEmployeeAdded(newEmployee);
+        setSuccessMessage('Employee added successfully!');
+        setTimeout(onClose, 3000);
+    } catch (error) {
+        setWarning(error.message);
+        setTimeout(() => setWarning(''), 3000);
+    } finally {
+        setLoading(false);
+    }
+};
+
+    
 
     if (!isOpen) return null;
 
@@ -214,7 +226,7 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
                         </div>
                         
                         <div className="add-employee-form-column">
-                        <button type="button" onClick={generateIdNum}>Generate ID Number</button>
+                            <button type="button" onClick={generateIdNum}>Generate ID Number</button>
                             <input
                                 type="text"
                                 placeholder="ID Number"
@@ -235,6 +247,29 @@ function AddEmployeeModal({ isOpen, onClose, onEmployeeAdded }) {
                                 <option value="maintainance">Maintainance Team</option>
                             </select>
 
+                            <div className="add-employee-time-picker">
+                                <label style={{ fontSize: '0.8rem', marginRight: '5px' }}>Login Time</label>
+                                <DatePicker
+                                    selected={loginTime}
+                                    onChange={setLoginTime}
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    dateFormat="h:mm aa"
+                                    showTimeSelectOnly
+                                />
+                            </div>
+
+                            <div className="add-employee-time-picker">
+                                <label style={{ fontSize: '0.8rem', marginRight: '5px' }}>Logout Time</label>
+                                <DatePicker
+                                    selected={logoutTime}
+                                    onChange={setLogoutTime}
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    dateFormat="h:mm aa"
+                                    showTimeSelectOnly
+                                />
+                            </div>
 
                             <button type="button" onClick={() => setIconPanelVisible(!iconPanelVisible)}>Choose Icon</button>
                             {iconPanelVisible && (

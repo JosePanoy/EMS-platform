@@ -8,7 +8,7 @@ function DashboardDisplayAllEmployee() {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortedByName, setSortedByName] = useState(false);
     const [filterStatus, setFilterStatus] = useState("all");
-    const socket = io('http://localhost:8000'); 
+    const socket = io('http://localhost:8000');
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -65,32 +65,55 @@ function DashboardDisplayAllEmployee() {
 
     const departments = ['sales', 'marketing', 'call-representative', 'tech', 'software-development', 'maintainance'];
 
+    const calculateLoginStatus = (employee) => {
+        const actualLoginTime = new Date();
+
+        if (!employee.loginTime) return { status: 'Absent', color: 'red' };
+    
+        const [loginHour, loginMinute] = employee.loginTime.split(':');
+        const loginDate = new Date();
+        loginDate.setHours(parseInt(loginHour), parseInt(loginMinute), 0, 0);
+
+        const diffInMinutes = Math.floor((actualLoginTime - loginDate) / (1000 * 60));
+
+        if (diffInMinutes < -10) {
+            return { status: 'Early Bird', color: 'darkyellowgreen' }; 
+        } else if (diffInMinutes >= -10 && diffInMinutes < 0) {
+            return { status: 'Just in Time', color: 'darkgreen' }; 
+        } else if (diffInMinutes >= 0 && diffInMinutes <= 5) {
+            return { status: 'In Time, Do Better', color: 'darkorange' }; 
+        } else if (diffInMinutes > 5 && diffInMinutes <= 15) {
+            return { status: 'Late', color: 'red' }; 
+        } else {
+            return { status: 'Absent', color: 'red' }; 
+        }
+    };
+    
+
     const renderDepartmentGrid = (department) => {
         const departmentEmployees = sortedEmployees.filter((employee) => employee.userTeam === department);
         return (
             <div className={`employee-grid-container ${department.toLowerCase().replace(' ', '-')}`} key={department}>
                 <h2 style={{ textAlign: 'left', marginBottom: '-5px', marginLeft: '50px' }}>{department.toUpperCase()}</h2>
                 <div className="employee-grid">
-                    {departmentEmployees.map((employee) => (
-                        <div key={employee._id} className="employee-tile">
-                            <div className="employee-tile-image">
-                                <img src={employee.icon} alt={`${employee.firstName} ${employee.lastName}`} />
-                            </div>
-                            <div className="employee-tile-info">
-                                <p className="employee-tile-name">{employee.firstName} {employee.lastName}</p>
-                                <p className="employee-tile-department">{employee.userTeam}</p>
-                                <div className="employee-tile-status">
-                                    <span
-                                        className="status-dot"
-                                        style={{ 
-                                            backgroundColor: employee.isOnline ? '#54f000' : 'red' 
-                                        }}
-                                    ></span>
-                                    {employee.isOnline ? 'Present' : 'Absent'}
+                    {departmentEmployees.map((employee) => {
+                        const { status, color } = calculateLoginStatus(employee);
+                        return (
+                            <div key={employee._id} className="employee-tile">
+                                <div className="employee-tile-image">
+                                    <img src={employee.icon} alt={`${employee.firstName} ${employee.lastName}`} />
+                                </div>
+                                <div className="employee-tile-info">
+                                    <p className="employee-tile-name">{employee.firstName} {employee.lastName}</p>
+                                    <p className="employee-tile-department">{employee.userTeam}</p>
+                                    <div className="employee-tile-status">
+                                        <span className="status-dot" style={{ backgroundColor: color }}></span>
+                                        {status}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         );

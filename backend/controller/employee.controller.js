@@ -1,36 +1,17 @@
-// employee.controller.js
 import Employee from '../model/employee.js';
 import EmployeeAttendance from '../model/employeeAttendance.js';
-import fs from 'fs';
-import path from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 
 export const createEmployee = async (req, res) => {
-    const { 
-        firstName, 
-        lastName, 
-        email, 
-        address, 
-        phoneNumber, 
-        password, 
-        idNum, 
-        userTeam, 
-        icon, 
-        imageUpload,
-        loginTime,  
-        logoutTime
-    } = req.body;
+    const { firstName, lastName, email, address, phoneNumber, password, idNum, userTeam, icon, imageUpload, loginTime, logoutTime } = req.body;
 
     try {
         const existingEmployee = await Employee.findOne({ email });
-        if (existingEmployee) {
-            return res.status(400).json({ message: 'Email already registered' });
-        }
+        if (existingEmployee) return res.status(400).json({ message: 'Email already registered' });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const newLoginTime = loginTime ? moment(loginTime, ["h:mm A", "HH:mm"]).format("h:mm A") : "8:00 AM";
         const newLogoutTime = logoutTime ? moment(logoutTime, ["h:mm A", "HH:mm"]).format("h:mm A") : "5:00 PM"; 
 
@@ -66,6 +47,7 @@ export const createEmployee = async (req, res) => {
 };
 
 
+
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
@@ -83,29 +65,25 @@ export const loginEmployee = async (req, res) => {
     const currentDate = new Date().toISOString().split('T')[0];
     const lastLoginDate = employee.lastLoginDate ? new Date(employee.lastLoginDate).toISOString().split('T')[0] : null;
 
+
     if (currentDate !== lastLoginDate) {
-        const loginTime = moment().toDate();
-        const scheduledLoginTime = moment(employee.loginTime, "h:mm A").toDate();
-        const timeDiff = (loginTime - scheduledLoginTime) / (1000 * 60);
+        try {
+       
+            const newAttendance = new EmployeeAttendance({
+                employeeId: employee._id,
+                date: new Date(),
+                loginTime: moment().format("h:mm A"), 
+                status: 'Present',
+            });
 
-        let status = 'Present';
-        if (timeDiff <= -15) status = 'Early Bird';
-        else if (timeDiff > -15 && timeDiff <= -5) status = 'Just In Time';
-        else if (timeDiff > -5 && timeDiff <= 5) status = 'In Time, Do Better';
-        else if (timeDiff > 5 && timeDiff <= 10) status = 'Late';
-        else if (timeDiff > 30) status = 'Absent';
+            await newAttendance.save();
 
-        const newAttendance = new EmployeeAttendance({
-            employeeId: employee._id,
-            date: new Date(),
-            loginTime: loginTime.toLocaleString(),
-            logoutTime: null,
-            status,
-        });
-
-        await newAttendance.save();
-        employee.lastLoginDate = new Date();
-        await employee.save();
+            employee.lastLoginDate = new Date();
+            await employee.save();
+        } catch (error) {
+            console.error('Error recording attendance:', error);
+            return res.status(500).json({ message: 'Error recording attendance' });
+        }
     }
 
     employee.isOnline = true;
@@ -113,9 +91,8 @@ export const loginEmployee = async (req, res) => {
 
     const token = jwt.sign({ id: employee._id, role: 'employee' }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ message: 'Employee logged in successfully', token, employee });
+    return res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };
-
 
 
 
@@ -123,7 +100,6 @@ export const deleteEmployees = async (req, res) => {
     const { ids } = req.body;
 
     try {
-
         if (!ids || !Array.isArray(ids) || ids.length === 0) {
             return res.status(400).json({ message: 'No IDs provided for deletion.' });
         }
@@ -135,7 +111,6 @@ export const deleteEmployees = async (req, res) => {
         }
         return res.status(200).json({ message: 'Employees deleted successfully.', deletedCount: result.deletedCount });
     } catch (error) {
-
         return res.status(500).json({ message: 'Error deleting employees', error });
     }
 };
@@ -147,7 +122,7 @@ export const getEmployeeCount = async(req,res) => {
     } catch (error) {
         return res.status(500).json({message : 'Error fetching number of employees', error})
     }
-}
+};
 
 export const updateEmployee = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, employeeId } = req.body;

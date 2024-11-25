@@ -10,7 +10,6 @@ function DashboardDisplayAllEmployee() {
     const [filterStatus, setFilterStatus] = useState("all");
     const socket = io('http://localhost:8000'); // Connect to the backend socket server
 
-    // Fetch employees and handle socket status change
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
@@ -35,7 +34,7 @@ function DashboardDisplayAllEmployee() {
         });
 
         return () => {
-            socket.off('status-change'); 
+            socket.off('status-change'); // Clean up socket event listener
         };
     }, []);
 
@@ -47,7 +46,6 @@ function DashboardDisplayAllEmployee() {
         setSortedByName((prevState) => !prevState);
     };
 
-
     const handleStatusChange = (event) => {
         setFilterStatus((prev) => (prev === event.target.value ? "all" : event.target.value));
     };
@@ -56,14 +54,15 @@ function DashboardDisplayAllEmployee() {
         (employee.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         employee.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         employee.userTeam.toLowerCase().includes(searchQuery.toLowerCase())) &&
-        (filterStatus === "all" || (filterStatus === "online" && employee.isOnline) || (filterStatus === "absent" && !employee.isOnline))
+        (filterStatus === "all" || 
+        (filterStatus === "online" && employee.isOnline) || 
+        (filterStatus === "absent" && !employee.isOnline))
     );
 
     const sortedEmployees = sortedByName
         ? [...filteredEmployees].sort((a, b) => a.firstName.localeCompare(b.firstName))
         : filteredEmployees;
 
-    // Render department grid for employees
     const departments = ['sales', 'marketing', 'call-representative', 'tech', 'software-development', 'maintainance'];
 
     const renderDepartmentGrid = (department) => {

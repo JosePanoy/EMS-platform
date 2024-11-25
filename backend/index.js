@@ -1,3 +1,4 @@
+//index.js
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -63,7 +64,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle disconnection
+
     socket.on('disconnect', async () => {
        // console.log('User disconnected');
     });

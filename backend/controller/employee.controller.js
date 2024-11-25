@@ -1,11 +1,11 @@
 // employee.controller.js
 import Employee from '../model/employee.js';
+import EmployeeAttendance from '../model/employeeAttendance.js';
 import fs from 'fs';
 import path from 'path';
-import bcrypt from 'bcrypt'; 
-import jwt from 'jsonwebtoken'; 
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import moment from 'moment';
-
 
 export const createEmployee = async (req, res) => {
     const { 
@@ -66,11 +66,9 @@ export const createEmployee = async (req, res) => {
 };
 
 
-
-
-/// for employee log in
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
+
     const employee = await Employee.findOne({ idNum });
 
     if (!employee) {
@@ -82,25 +80,40 @@ export const loginEmployee = async (req, res) => {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
 
-    // Set isOnline to true
+    const currentDate = new Date().toISOString().split('T')[0];
+    const lastLoginDate = employee.lastLoginDate ? new Date(employee.lastLoginDate).toISOString().split('T')[0] : null;
+
+    if (currentDate !== lastLoginDate) {
+        const loginTime = moment().toDate();
+        const scheduledLoginTime = moment(employee.loginTime, "h:mm A").toDate();
+        const timeDiff = (loginTime - scheduledLoginTime) / (1000 * 60);
+
+        let status = 'Present';
+        if (timeDiff <= -15) status = 'Early Bird';
+        else if (timeDiff > -15 && timeDiff <= -5) status = 'Just In Time';
+        else if (timeDiff > -5 && timeDiff <= 5) status = 'In Time, Do Better';
+        else if (timeDiff > 5 && timeDiff <= 10) status = 'Late';
+        else if (timeDiff > 30) status = 'Absent';
+
+        const newAttendance = new EmployeeAttendance({
+            employeeId: employee._id,
+            date: new Date(),
+            loginTime: loginTime.toLocaleString(),
+            logoutTime: null,
+            status,
+        });
+
+        await newAttendance.save();
+        employee.lastLoginDate = new Date();
+        await employee.save();
+    }
+
     employee.isOnline = true;
     await employee.save();
 
     const token = jwt.sign({ id: employee._id, role: 'employee' }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({ message: 'Employee logged in successfully', token, employee });
-};
-
-
-
-
-export const getAllEmployees = async (req, res) => {
-    try {
-        const employees = await Employee.find();
-        return res.status(200).json(employees);
-    } catch (error) {
-        return res.status(500).json({ message: 'Error fetching employees', error });
-    }
 };
 
 
@@ -127,9 +140,6 @@ export const deleteEmployees = async (req, res) => {
     }
 };
 
-
-// get all numbers of employees
-
 export const getEmployeeCount = async(req,res) => {
     try {
         const employeeCount = await Employee.countDocuments();
@@ -138,8 +148,6 @@ export const getEmployeeCount = async(req,res) => {
         return res.status(500).json({message : 'Error fetching number of employees', error})
     }
 }
-
-// for update specific user
 
 export const updateEmployee = async (req, res) => {
     const { firstName, lastName, email, address, phoneNumber, employeeId } = req.body;
@@ -170,9 +178,6 @@ export const updateEmployee = async (req, res) => {
     }
 };
 
-
-// count employee in each depratment
-
 export const getDepartmentEmployeeCount = async (req, res) => {
     try {
         const departmentCounts = await Employee.aggregate([
@@ -195,8 +200,6 @@ export const getDepartmentEmployeeCount = async (req, res) => {
     }
 };
 
-
-// getting names in specific deaprtment
 export const getEmployeesByDepartment = async (req, res) => {
     const { department } = req.params;
 
@@ -207,6 +210,15 @@ export const getEmployeesByDepartment = async (req, res) => {
             return res.status(404).json({ message: 'No employees found in this department' });
         }
 
+        return res.status(200).json(employees);
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching employees', error });
+    }
+};
+
+export const getAllEmployees = async (req, res) => {
+    try {
+        const employees = await Employee.find();
         return res.status(200).json(employees);
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching employees', error });

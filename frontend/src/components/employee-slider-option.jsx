@@ -23,13 +23,8 @@ function EmployeeSlider() {
             navigate(current === 0 ? "/admin" : "/employee-dashboard");
         }
 
-        socket.on('connect', () => {
-            console.log('Socket connected:', socket.id);
-        });
-
-        socket.on('disconnect', () => {
-            console.log('Socket disconnected');
-        });
+        socket.on('connect', () => {});
+        socket.on('disconnect', () => {});
 
         return () => {
             socket.off('connect');

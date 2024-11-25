@@ -8,7 +8,7 @@ function DashboardDisplayAllEmployee() {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortedByName, setSortedByName] = useState(false);
     const [filterStatus, setFilterStatus] = useState("all");
-    const socket = io('http://localhost:8000'); // Connect to the backend socket server
+    const socket = io('http://localhost:8000'); 
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -34,7 +34,7 @@ function DashboardDisplayAllEmployee() {
         });
 
         return () => {
-            socket.off('status-change'); // Clean up socket event listener
+            socket.off('status-change');
         };
     }, []);
 
@@ -82,7 +82,9 @@ function DashboardDisplayAllEmployee() {
                                 <div className="employee-tile-status">
                                     <span
                                         className="status-dot"
-                                        style={{ backgroundColor: employee.isOnline ? '#54f000' : 'red' }}
+                                        style={{ 
+                                            backgroundColor: employee.isOnline ? '#54f000' : 'red' 
+                                        }}
                                     ></span>
                                     {employee.isOnline ? 'Present' : 'Absent'}
                                 </div>

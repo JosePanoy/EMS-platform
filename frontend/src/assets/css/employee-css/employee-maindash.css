@@ -1,0 +1,104 @@
+.EmployeeMainDash__grid-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.EmployeeMainDash__grid-item {
+    background-color: #387478cc;
+    border: 1px solid #E2F1E7;
+    padding: 20px;
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #E2F1E7;
+}
+
+.EmployeeMainDash__grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.EmployeeMainDash__box-1,
+.EmployeeMainDash__box-2 {
+    height: 300px;
+    border-radius: 8px;
+    background-color: #387478cc;
+    border: 1px solid #E2F1E7;
+}
+
+.EmployeeMainDash__box-1 {
+    position: relative;
+    border-bottom-right-radius: 30px;
+}
+
+.EmployeeMainDash__box-2 {
+    border-top-left-radius: 30px;
+}
+
+.EmployeeMainDash__box-3-10 {
+    grid-column: span 2;
+}
+
+.EmployeeMainDash__info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.EmployeeMainDash__icon {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.EmployeeMainDash__text-info {
+    text-align: left;
+    margin-left: 20px;
+}
+
+.EmployeeMainDash__name,
+.EmployeeMainDash__team {
+    margin: 5px 0;
+}
+
+.EmployeeMainDash__name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: default;
+}
+
+.EmployeeMainDash__team {
+    font-size: 0.9rem;
+    font-weight: 400;
+    cursor: default;
+}
+
+.EmployeeMainDash__status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: yellowgreen;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #E2F1E7;
+}
+
+@media (max-width: 1024px) {
+    .EmployeeMainDash__grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .EmployeeMainDash__grid-container {
+        grid-template-columns: 1fr;
+    }
+}

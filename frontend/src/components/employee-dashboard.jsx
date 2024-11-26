@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import EmployeeMainBar from './employeesubcomponent/employee-mainbar';
 import EmployeeSidePanel from './employeesubcomponent/employee-sidepanel';
 import EmployeeNavbar from './employeesubcomponent/employee-Navbar';
-
+import EmployeeMainDash from './employeesubcomponent/employee-maindash';
 
 function EmployeeMainDashboard() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -28,12 +29,10 @@ function EmployeeMainDashboard() {
             <EmployeeNavbar handleLogout={handleLogout} employee={employee} />
             <EmployeeMainBar />
             <EmployeeSidePanel />
-            <h1 style={{ textAlign: 'center', margin: '10px 0 auto',fontSize: '1.7rem', cursor: 'default' }}>
-                Employee Main Dashboard
-            </h1>
-
- 
-  
+            
+            {/* Only show EmployeeMainDash on /employee route */}
+            {location.pathname === '/employee' && <EmployeeMainDash employee={employee} />}
+            
             <Outlet context={employee} />
         </>
     );

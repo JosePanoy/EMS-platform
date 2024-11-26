@@ -13,14 +13,12 @@ import PerformanceOverview from './components/adminpagescomponent/performance-ov
 import MessagingNotification from './components/adminpagescomponent/messaging-notification';
 import Departments from './components/adminpagescomponent/deparments';
 
-// Employee pages
 import DashboardDisplayAllEmployee from './components/employeepagescomponent/employee-maindash';
 import EmployeeAttendance from "./components/employeepagescomponent/employee-attendance";
 import EmployeeLeave from './components/employeepagescomponent/employee-leave';
 import EmployeeTask from './components/employeepagescomponent/employee-tasks';
 import EmployeeProfile from './components/employeepagescomponent/employee-profile';
 
-// Main rendering logic
 const root = createRoot(document.getElementById('root'));
 
 root.render(
@@ -29,8 +27,6 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/tempsignin" element={<TempSignIn />} />
-
-        {/* Admin routes */}
         <Route path="/admin" element={<AdminMainDashboard />}>
           <Route path="user-management" element={<UserManagement />} />
           <Route path="attendance-leave" element={<AttendanceLeaveManagement />} />
@@ -39,8 +35,6 @@ root.render(
           <Route path="messaging-notification" element={<MessagingNotification />} />
           <Route path="overview" element={<DashboardOverview />} />
         </Route>
-
-        {/* Employee routes */}
         <Route path="/employee" element={<EmployeeMainDashboard />}>
           <Route path="overview" element={<DashboardDisplayAllEmployee />} />
           <Route path="attendance" element={<EmployeeAttendance />} />

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import "../../assets/css/employee-css/employee-mainbar.css";
-
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function EmployeeMainBar({ handleLogout }) {
-    const navigate = useNavigate();
     const [time, setTime] = useState(new Date().toLocaleTimeString());
 
     useEffect(() => {
@@ -17,14 +15,12 @@ function EmployeeMainBar({ handleLogout }) {
 
     return (
         <div className="employee-mainbar-navbar">
-            <Link  to="/employee"  className="employee-mainbar-nav-button">Main Dashboard</Link>
-            <Link  to="overview"  className="employee-mainbar-nav-button">Overview</Link>
-            <Link to="attendance" className="employee-mainbar-nav-button">Attendance</Link>
-            <Link to="task" className="employee-mainbar-nav-button">Tasks/Projects</Link>
-            <Link to="leave" className="employee-mainbar-nav-button">Leave</Link>
-            <Link to="profile" className="employee-mainbar-nav-button">Profile</Link>
-
-
+            <Link to="/employee" className="employee-mainbar-nav-button">Main Dashboard</Link>
+            <Link to="/employee/overview" className="employee-mainbar-nav-button">Overview</Link>
+            <Link to="/employee/attendance" className="employee-mainbar-nav-button">Attendance</Link>
+            <Link to="/employee/task" className="employee-mainbar-nav-button">Tasks/Projects</Link>
+            <Link to="/employee/leave" className="employee-mainbar-nav-button">Leave</Link>
+            <Link to="/employee/profile" className="employee-mainbar-nav-button">Profile</Link>
         </div>
     );
 }

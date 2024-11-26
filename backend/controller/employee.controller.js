@@ -46,6 +46,7 @@ export const createEmployee = async (req, res) => {
     }
 };
 
+
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
@@ -74,13 +75,13 @@ export const loginEmployee = async (req, res) => {
             const actualLoginTime = new Date();
             const actualLoginTimeString = actualLoginTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);  // Difference in minutes
+            const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);
 
             let status = 'Present';
 
             if (timeDifference <= -15) {
                 status = 'Early Bird';
-            } else if (timeDifference > -15 && timeDifference <= -5) {
+            } else if (timeDifference > -15 && timeDifference < 0) {
                 status = 'Just In Time';
             } else if (timeDifference >= 0 && timeDifference <= 5) {
                 status = 'In Time, Do Better';

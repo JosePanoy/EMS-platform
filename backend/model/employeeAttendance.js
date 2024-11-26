@@ -1,10 +1,8 @@
-// employeeAttendance.js
 import mongoose from 'mongoose';
 
 const EmployeeAttendanceSchema = new mongoose.Schema({
     employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Employee',
+        type: String, // Change from ObjectId to String
         required: true
     },
     date: {
@@ -24,6 +22,11 @@ const EmployeeAttendanceSchema = new mongoose.Schema({
         type: String,
         enum: ['Early Bird', 'Just In Time', 'In Time, Do Better', 'Late', 'Absent', 'Present'],
         default: 'Present'
+    },
+    logoutStatus: {
+        type: String,
+        enum: ['Early Out', 'Logged Out', 'Overtime'],
+        default: 'Logged Out'
     }
 }, {
     timestamps: true

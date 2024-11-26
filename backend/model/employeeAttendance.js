@@ -1,5 +1,4 @@
 // employeeAttendance.js
-// employeeAttendance.js
 import mongoose from 'mongoose';
 
 const EmployeeAttendanceSchema = new mongoose.Schema({

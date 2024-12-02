@@ -1,3 +1,4 @@
+//employee.controller.js
 import Employee from '../model/employee.js';
 import EmployeeAttendance from '../model/employeeAttendance.js';
 import bcrypt from 'bcrypt';
@@ -45,13 +46,10 @@ export const createEmployee = async (req, res) => {
         return res.status(500).json({ message: 'Error registering employee', error });
     }
 };
-
-
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
     const employee = await Employee.findOne({ idNum });
-
     if (!employee) {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
@@ -92,26 +90,27 @@ export const loginEmployee = async (req, res) => {
                     status = 'Absent';
                 }
 
-                console.log(`Actual Login Time: ${actualLoginTimeString}`);
-                console.log(`Status: ${status}`);
-                console.log(`Time Difference: ${timeDifference} minutes`);
+                const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentDate });
 
-                const newAttendance = new EmployeeAttendance({
-                    employeeId: employee._id,
-                    date: new Date(),
-                    loginTime: actualLoginTimeString,
-                    status,
-                });
+                if (existingAttendance) {
+                    existingAttendance.loginTime = actualLoginTimeString;
+                    existingAttendance.status = status;
+                    await existingAttendance.save();
+                } else {
+                    const newAttendance = new EmployeeAttendance({
+                        employeeId: employee._id,
+                        date: new Date(),
+                        loginTime: actualLoginTimeString,
+                        status,
+                    });
 
-                await newAttendance.save();  // Ensure the attendance is saved properly
-
-                console.log("Attendance saved successfully");
+                    await newAttendance.save();
+                }
             }
 
             employee.lastLoginDate = new Date();
             await employee.save();
         } catch (error) {
-            console.error('Error recording attendance:', error);
             return res.status(500).json({ message: 'Error recording attendance' });
         }
     }
@@ -123,6 +122,54 @@ export const loginEmployee = async (req, res) => {
 
     return res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };
+
+
+
+
+export const logoutEmployee = async (req, res) => {
+    const { idNum } = req.body;
+
+    const employee = await Employee.findOne({ idNum });
+
+    if (!employee) {
+        return res.status(401).json({ message: 'Employee not found' });
+    }
+
+    const currentTime = moment();
+    const logoutTime = moment(employee.logoutTime, ["h:mm A", "HH:mm"]);
+
+    let status = "Logged Out";
+
+    if (currentTime.isBefore(logoutTime.subtract(5, 'minutes'))) {
+        status = "Early Bird";
+    } else if (currentTime.isAfter(logoutTime.add(20, 'minutes'))) {
+        status = "Overtime";
+    }
+
+    const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentTime.toISOString().split('T')[0] });
+
+    if (existingAttendance) {
+        existingAttendance.logoutTime = currentTime.format('h:mm A');
+        existingAttendance.status = status;
+        await existingAttendance.save();
+    } else {
+        const newAttendance = new EmployeeAttendance({
+            employeeId: employee._id,
+            date: currentTime.toDate(),
+            logoutTime: currentTime.format('h:mm A'),
+            status,  
+        });
+
+        await newAttendance.save();
+    }
+
+    employee.isOnline = false;
+    await employee.save();
+
+    return res.status(200).json({ message: 'Employee logged out successfully', employee });
+};
+
+
 
 
 

@@ -38,13 +38,13 @@ function EmployeeNavbar({ handleLogout, employee }) {
                 console.error('Error during logout process:', error);
                 setLoading(false);
                 if (error.response) {
-                    // Backend responded with an error
+  
                     alert(`Error: ${error.response.data.message}`);
                 } else if (error.request) {
-                    // Request was made but no response was received
+  
                     alert('Error: Network issue. Please check your server.');
                 } else {
-                    // Something else happened in setting up the request
+
                     alert('Error: An unexpected issue occurred.');
                 }
             }

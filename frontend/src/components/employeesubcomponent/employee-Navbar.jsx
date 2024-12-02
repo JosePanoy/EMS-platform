@@ -17,43 +17,31 @@ function EmployeeNavbar({ handleLogout, employee }) {
         return () => clearInterval(interval);
     }, []);
 
-    const handleShowModal = () => {
-        setShowModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
+    const handleShowModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
 
     const handleConfirmLogout = async () => {
-    setLoading(true);
-    try {
-        const currentTime = new Date().toLocaleTimeString();
-        console.log("Sending logout data:", {
-            idNum: employee.idNum,
-            logoutTime: currentTime
-        });
+        setLoading(true);
+        try {
+            const currentTime = new Date().toLocaleTimeString();
+            fetch(`http://localhost:8000/ems/employee/updatelogoutTime/${employee.idNum}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ logoutTime: currentTime }),
+            });
 
-        await fetch('http://localhost:8000/ems/employee/updatelogoutTime', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                employeeId: employee.idNum,  // Make sure this matches the backend
-                logoutTime: currentTime
-            })
-        });
-
-        setTimeout(() => {
-            handleLogout();
-            setShowModal(false);
+            setTimeout(() => {
+                handleLogout();
+                setShowModal(false);
+                setLoading(false);
+            }, 3000);
+        } catch (error) {
+            console.error('Error during logout process:', error);
             setLoading(false);
-        }, 3000);
-    } catch (error) {
-        console.error('Error during logout process:', error);
-        setLoading(false);
-    }
-};
-
+        }
+    };
 
     return (
         <>

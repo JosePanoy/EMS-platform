@@ -1,3 +1,4 @@
+//employee.controller.js
 import Employee from '../model/employee.js';
 import EmployeeAttendance from '../model/employeeAttendance.js';
 import bcrypt from 'bcrypt';
@@ -127,8 +128,7 @@ export const logoutEmployee = async (req, res) => {
         }
 
         const employee = await Employee.findById(employeeId);
-        const logoutTimeValue = moment(logoutTime, "h:mm A").format("HH:mm");
-
+        const logoutTimeValue = moment(logoutTime, "h:mm A").format("HH:mm"); 
         const employeeLogoutTime = moment(employee.logoutTime, "h:mm A").format("HH:mm");
 
         let logoutStatus = 'Logged Out';
@@ -137,10 +137,13 @@ export const logoutEmployee = async (req, res) => {
             logoutStatus = 'Early Out';
         } else if (moment(logoutTimeValue).isAfter(moment(employeeLogoutTime).add(20, 'minutes'))) {
             logoutStatus = 'Overtime';
+        } else {
+            logoutStatus = 'In Time to Log Out';
         }
 
         employeeAttendance.logoutTime = logoutTime;
         employeeAttendance.logoutStatus = logoutStatus;
+
         await employeeAttendance.save();
 
         return res.status(200).json({ message: 'Logout status updated successfully', employeeAttendance });
@@ -148,6 +151,7 @@ export const logoutEmployee = async (req, res) => {
         return res.status(500).json({ message: 'Error updating logout status', error });
     }
 };
+
 
 export const deleteEmployees = async (req, res) => {
     const { ids } = req.body;
@@ -254,29 +258,37 @@ export const getAllEmployees = async (req, res) => {
 };
 
 
-export const updateLogoutTime = async (req, res) => {
-    const { employeeId, logoutTime } = req.body;
 
-    if (!employeeId || !logoutTime) {
-        return res.status(400).json({ message: 'Missing employeeId or logoutTime' });
-    }
+
+
+
+
+export const updateLogoutTime = async (req, res) => {
+    const { idNum } = req.params; // Get the idNum from the URL
+    const { logoutTime } = req.body; // Get logoutTime from the request body
 
     try {
-        const attendance = await EmployeeAttendance.findOne({
-            employeeId,
-            date: new Date().toISOString().split('T')[0],
-        });
+        const formattedLogoutTime = moment(logoutTime, "h:mm A").format("HH:mm");
+
+        // Find the attendance record using idNum, not MongoDB ObjectId
+        const attendance = await EmployeeAttendance.findOne({ employeeId: idNum, logoutTime: null });
 
         if (!attendance) {
-            return res.status(404).json({ message: 'Attendance record not found' });
+            return res.status(404).json({ message: "No active attendance record found for this employee." });
         }
 
-        attendance.logoutTime = logoutTime;
+        const loginTime = attendance.loginTime;
+        const status = calculateLogoutStatus(loginTime, formattedLogoutTime);
+
+        // Update the attendance with the logout time and status
+        attendance.logoutTime = formattedLogoutTime;
+        attendance.logoutStatus = status;
+
         await attendance.save();
 
-        return res.status(200).json({ message: 'Logout time updated successfully', attendance });
+        return res.status(200).json({ message: "Logout time updated successfully", attendance });
     } catch (error) {
-        console.error("Error in updateLogoutTime:", error);
-        return res.status(500).json({ message: 'Error updating logout time', error });
+        console.error("Error during logout update:", error);
+        return res.status(500).json({ message: "Error updating logout time", error });
     }
 };

@@ -24,11 +24,8 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
 
-    // Handle user login
     socket.on('login', async (idNum) => {
         try {
-            console.log(`Employee with ID ${idNum} is now online`);
-
             await Employee.updateMany({ isOnline: true }, { $set: { isOnline: false } });
 
             const employee = await Employee.findOne({ idNum: idNum });
@@ -36,38 +33,26 @@ io.on('connection', (socket) => {
             if (employee) {
                 employee.isOnline = true;  
                 await employee.save();
-                console.log(`Employee with ID ${idNum} is now online`);
-            } else {
-                console.log(`Employee with ID ${idNum} not found`);
             }
         } catch (error) {
             console.error("Error during login:", error);
         }
     });
 
-    // Handle user logout
     socket.on('logout', async (idNum) => {
         try {
-            console.log(`Employee with ID ${idNum} is now offline`);
-
             const employee = await Employee.findOne({ idNum: idNum });
 
             if (employee) {
                 employee.isOnline = false;  
                 await employee.save();
-                console.log(`Employee with ID ${idNum} is now offline`);
-            } else {
-                console.log(`Employee with ID ${idNum} not found`);
             }
         } catch (error) {
             console.error("Error during logout:", error);
         }
     });
 
-
-    socket.on('disconnect', async () => {
-       // console.log('User disconnected');
-    });
+    socket.on('disconnect', async () => {});
 });
 
 app.use(cors({ origin: 'http://localhost:5173' }));

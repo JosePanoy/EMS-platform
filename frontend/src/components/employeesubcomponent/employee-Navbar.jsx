@@ -3,44 +3,58 @@ import "../../assets/css/employee-css/employee-Navbar.css";
 import timelogo from "../../assets/img/save-time.png";
 import LogoutBTN from "../../assets/img/out.png";
 import loadingGIF from "../../assets/img/gif/loading.gif";
+import axios from 'axios';
 
 function EmployeeNavbar({ handleLogout, employee }) {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [logoutStatus, setLogoutStatus] = useState("");
 
     useEffect(() => {
         const interval = setInterval(() => {
             setTime(new Date().toLocaleTimeString());
         }, 1000);
 
-        return () => clearInterval(interval);
+        return () => clearInterval(interval); 
     }, []);
 
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
 
     const handleConfirmLogout = async () => {
-        setLoading(true);
-        try {
-            // Removed the feature to send logout time to backend
+    setLoading(true);
+    try {
+        const response = await axios.post("http://localhost:8000/ems/employee/logout", {
+            idNum: employee.idNum
+        });
 
-            setTimeout(() => {
-                handleLogout();
-                setShowModal(false);
-                setLoading(false);
-            }, 3000);
-        } catch (error) {
-            console.error('Error during logout process:', error);
-            setLoading(false);
+        if (response.status === 200) {
+            setLogoutStatus(response.data.status);  
+            setShowModal(false);
+            handleLogout(); 
         }
-    };
+            } catch (error) {
+                console.error('Error during logout process:', error);
+                setLoading(false);
+                if (error.response) {
+                    // Backend responded with an error
+                    alert(`Error: ${error.response.data.message}`);
+                } else if (error.request) {
+                    // Request was made but no response was received
+                    alert('Error: Network issue. Please check your server.');
+                } else {
+                    // Something else happened in setting up the request
+                    alert('Error: An unexpected issue occurred.');
+                }
+            }
+        };
 
     return (
         <>
             <div className="employee-navbar-container">
                 <div className="employee-id-container">
-                    <span style={{ cursor: 'default' }} className="employee-id">Employee ID#: {employee?.idNum}</span>
+                    <span className="employee-id">Employee ID#: {employee?.idNum}</span>
                 </div>
                 <div className="right-section">
                     <div className="employee-time-container">
@@ -71,6 +85,12 @@ function EmployeeNavbar({ handleLogout, employee }) {
                             </>
                         )}
                     </div>
+                </div>
+            )}
+
+            {logoutStatus && (
+                <div className="logout-status">
+                    <p>Logout Status: {logoutStatus}</p>
                 </div>
             )}
         </>

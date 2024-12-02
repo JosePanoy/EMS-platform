@@ -23,14 +23,7 @@ function EmployeeNavbar({ handleLogout, employee }) {
     const handleConfirmLogout = async () => {
         setLoading(true);
         try {
-            const currentTime = new Date().toLocaleTimeString();
-            fetch(`http://localhost:8000/ems/employee/updatelogoutTime/${employee.idNum}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ logoutTime: currentTime }),
-            });
+            // Removed the feature to send logout time to backend
 
             setTimeout(() => {
                 handleLogout();

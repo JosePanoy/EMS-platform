@@ -2,7 +2,7 @@
 import express from 'express';
 import { createEmployee, loginEmployee, getAllEmployees, deleteEmployees, 
     getEmployeeCount, updateEmployee, getDepartmentEmployeeCount, 
-    getEmployeesByDepartment, logoutEmployee, updateLogoutTime } from '../controller/employee.controller.js';
+    getEmployeesByDepartment, logoutEmployee } from '../controller/employee.controller.js';
 
 const router = express.Router();
 
@@ -15,6 +15,6 @@ router.put('/update', updateEmployee);
 router.get('/department-count', getDepartmentEmployeeCount);
 router.get('/employees/:department', getEmployeesByDepartment);
 router.post('/logout', logoutEmployee);
-router.post('/updatelogoutTime/:idNum', updateLogoutTime);
+
 
 export default router;

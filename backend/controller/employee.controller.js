@@ -1,4 +1,3 @@
-//employee.controller.js
 import Employee from '../model/employee.js';
 import EmployeeAttendance from '../model/employeeAttendance.js';
 import bcrypt from 'bcrypt';
@@ -47,6 +46,7 @@ export const createEmployee = async (req, res) => {
     }
 };
 
+
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
@@ -66,39 +66,47 @@ export const loginEmployee = async (req, res) => {
 
     if (currentDate !== lastLoginDate) {
         try {
-            const [setHours, setMinutes] = employee.loginTime.split(":");
-            const period = employee.loginTime.split(" ")[1];
-            const actualHours = period === "PM" ? parseInt(setHours) + 12 : parseInt(setHours);
-            const setLoginTime = new Date();
-            setLoginTime.setHours(actualHours, parseInt(setMinutes), 0, 0);
+            if (employee.loginTime) {
+                const [setHours, setMinutes] = employee.loginTime.split(":");
+                const period = employee.loginTime.split(" ")[1];
+                const actualHours = period === "PM" ? parseInt(setHours) + 12 : parseInt(setHours);
+                const setLoginTime = new Date();
+                setLoginTime.setHours(actualHours, parseInt(setMinutes), 0, 0);
 
-            const actualLoginTime = new Date();
-            const actualLoginTimeString = actualLoginTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const actualLoginTime = new Date();
+                const actualLoginTimeString = actualLoginTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);
+                const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);
 
-            let status = 'Present';
+                let status = 'Present';
 
-            if (timeDifference <= -15) {
-                status = 'Early Bird';
-            } else if (timeDifference > -15 && timeDifference < 0) {
-                status = 'Just In Time';
-            } else if (timeDifference >= 0 && timeDifference <= 5) {
-                status = 'In Time, Do Better';
-            } else if (timeDifference > 5 && timeDifference <= 15) {
-                status = 'Late';
-            } else if (timeDifference > 15 && timeDifference <= 30) {
-                status = 'Absent';
+                if (timeDifference <= -15) {
+                    status = 'Early Bird';
+                } else if (timeDifference > -15 && timeDifference < 0) {
+                    status = 'Just In Time';
+                } else if (timeDifference >= 0 && timeDifference <= 5) {
+                    status = 'In Time, Do Better';
+                } else if (timeDifference > 5 && timeDifference <= 15) {
+                    status = 'Late';
+                } else if (timeDifference > 15 && timeDifference <= 30) {
+                    status = 'Absent';
+                }
+
+                console.log(`Actual Login Time: ${actualLoginTimeString}`);
+                console.log(`Status: ${status}`);
+                console.log(`Time Difference: ${timeDifference} minutes`);
+
+                const newAttendance = new EmployeeAttendance({
+                    employeeId: employee._id,
+                    date: new Date(),
+                    loginTime: actualLoginTimeString,
+                    status,
+                });
+
+                await newAttendance.save();  // Ensure the attendance is saved properly
+
+                console.log("Attendance saved successfully");
             }
-
-            const newAttendance = new EmployeeAttendance({
-                employeeId: employee._id,
-                date: new Date(),
-                loginTime: actualLoginTimeString,
-                status,
-            });
-
-            await newAttendance.save();
 
             employee.lastLoginDate = new Date();
             await employee.save();
@@ -118,7 +126,7 @@ export const loginEmployee = async (req, res) => {
 
 
 export const logoutEmployee = async (req, res) => {
-    const { employeeId, logoutTime } = req.body;
+    const { employeeId } = req.body;
 
     try {
         const employeeAttendance = await EmployeeAttendance.findOne({ employeeId, date: new Date().toISOString().split('T')[0] });
@@ -128,30 +136,12 @@ export const logoutEmployee = async (req, res) => {
         }
 
         const employee = await Employee.findById(employeeId);
-        const logoutTimeValue = moment(logoutTime, "h:mm A").format("HH:mm"); 
-        const employeeLogoutTime = moment(employee.logoutTime, "h:mm A").format("HH:mm");
 
-        let logoutStatus = 'Logged Out';
-
-        if (moment(logoutTimeValue).isBefore(moment(employeeLogoutTime).subtract(5, 'minutes'))) {
-            logoutStatus = 'Early Out';
-        } else if (moment(logoutTimeValue).isAfter(moment(employeeLogoutTime).add(20, 'minutes'))) {
-            logoutStatus = 'Overtime';
-        } else {
-            logoutStatus = 'In Time to Log Out';
-        }
-
-        employeeAttendance.logoutTime = logoutTime;
-        employeeAttendance.logoutStatus = logoutStatus;
-
-        await employeeAttendance.save();
-
-        return res.status(200).json({ message: 'Logout status updated successfully', employeeAttendance });
+        return res.status(200).json({ message: 'Logout processed successfully' });
     } catch (error) {
-        return res.status(500).json({ message: 'Error updating logout status', error });
+        return res.status(500).json({ message: 'Error processing logout', error });
     }
 };
-
 
 export const deleteEmployees = async (req, res) => {
     const { ids } = req.body;
@@ -254,41 +244,5 @@ export const getAllEmployees = async (req, res) => {
         return res.status(200).json(employees);
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching employees', error });
-    }
-};
-
-
-
-
-
-
-
-export const updateLogoutTime = async (req, res) => {
-    const { idNum } = req.params; // Get the idNum from the URL
-    const { logoutTime } = req.body; // Get logoutTime from the request body
-
-    try {
-        const formattedLogoutTime = moment(logoutTime, "h:mm A").format("HH:mm");
-
-        // Find the attendance record using idNum, not MongoDB ObjectId
-        const attendance = await EmployeeAttendance.findOne({ employeeId: idNum, logoutTime: null });
-
-        if (!attendance) {
-            return res.status(404).json({ message: "No active attendance record found for this employee." });
-        }
-
-        const loginTime = attendance.loginTime;
-        const status = calculateLogoutStatus(loginTime, formattedLogoutTime);
-
-        // Update the attendance with the logout time and status
-        attendance.logoutTime = formattedLogoutTime;
-        attendance.logoutStatus = status;
-
-        await attendance.save();
-
-        return res.status(200).json({ message: "Logout time updated successfully", attendance });
-    } catch (error) {
-        console.error("Error during logout update:", error);
-        return res.status(500).json({ message: "Error updating logout time", error });
     }
 };

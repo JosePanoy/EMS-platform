@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "../assets/css/employee-slider.css";
 import AdminLogo from "../assets/img/admin.png";
 import EmployeeLogo from "../assets/img/employee.png";
@@ -73,7 +73,7 @@ function EmployeeSlider() {
 
     const handleLogin = async () => {
         const idNumber = idNum.join("-");
-        const role = options[current].label.toLowerCase(); 
+        const role = options[current].label.toLowerCase();
         setIsLoading(true);
 
         try {

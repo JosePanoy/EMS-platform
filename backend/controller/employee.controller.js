@@ -129,15 +129,35 @@ export const logoutEmployee = async (req, res) => {
     const { employeeId } = req.body;
 
     try {
-        const employeeAttendance = await EmployeeAttendance.findOne({ employeeId, date: new Date().toISOString().split('T')[0] });
+        const employee = await Employee.findById(employeeId);
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
 
+        const employeeAttendance = await EmployeeAttendance.findOne({ employeeId, date: new Date().toISOString().split('T')[0] });
         if (!employeeAttendance) {
             return res.status(404).json({ message: 'Attendance not found' });
         }
 
-        const employee = await Employee.findById(employeeId);
+        const currentLogoutTime = moment();
+        const logoutTime = moment(employee.logoutTime, "h:mm A");
+        const timeDifference = currentLogoutTime.diff(logoutTime, 'minutes');
+        let status = 'Logged Out';
 
-        return res.status(200).json({ message: 'Logout processed successfully' });
+        if (timeDifference <= -5) {
+            status = 'Early Out';
+        } else if (timeDifference > 20) {
+            status = 'Overtime';
+        }
+
+        employeeAttendance.logoutTime = currentLogoutTime.format("h:mm A");
+        employeeAttendance.logoutStatus = status;
+
+        await employeeAttendance.save();
+        employee.isOnline = false;
+        await employee.save();
+
+        return res.status(200).json({ message: 'Employee logged out successfully', employeeAttendance });
     } catch (error) {
         return res.status(500).json({ message: 'Error processing logout', error });
     }

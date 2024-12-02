@@ -22,16 +22,29 @@ function EmployeeNavbar({ handleLogout, employee }) {
 
     const handleConfirmLogout = async () => {
         setLoading(true);
-        try {
-            // Removed the feature to send logout time to backend
+        const logoutTime = new Date().toLocaleTimeString();
 
-            setTimeout(() => {
-                handleLogout();
-                setShowModal(false);
+        try {
+            const response = await fetch('http://localhost:8000/ems/employee/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    employeeId: employee._id,
+                }),
+            });
+
+            if (response.ok) {
+                setTimeout(() => {
+                    handleLogout();
+                    setShowModal(false);
+                    setLoading(false);
+                }, 3000);
+            } else {
+                console.error('Failed to logout');
                 setLoading(false);
-            }, 3000);
+            }
         } catch (error) {
-            console.error('Error during logout process:', error);
+            console.error('Logout error:', error);
             setLoading(false);
         }
     };

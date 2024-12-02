@@ -30,25 +30,24 @@ function EmployeeNavbar({ handleLogout, employee }) {
         });
 
         if (response.status === 200) {
-            setLogoutStatus(response.data.status);  
+            setLogoutStatus(response.data.status);
             setShowModal(false);
-            handleLogout(); 
+            handleLogout();
         }
-            } catch (error) {
-                console.error('Error during logout process:', error);
-                setLoading(false);
-                if (error.response) {
-  
-                    alert(`Error: ${error.response.data.message}`);
-                } else if (error.request) {
-  
-                    alert('Error: Network issue. Please check your server.');
-                } else {
+    } catch (error) {
+        console.error('Error during logout process:', error);
+        setLoading(false);
+        if (error.response) {
+            alert(`Error: ${error.response.data.message}`);
+        } else if (error.request) {
+            alert('Error: Network issue. Please check your server.');
+        } else {
+            alert('Error: An unexpected issue occurred.');
+        }
+    }
+};
 
-                    alert('Error: An unexpected issue occurred.');
-                }
-            }
-        };
+
 
     return (
         <>

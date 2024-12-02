@@ -46,6 +46,8 @@ export const createEmployee = async (req, res) => {
         return res.status(500).json({ message: 'Error registering employee', error });
     }
 };
+
+
 export const loginEmployee = async (req, res) => {
     const { idNum, password } = req.body;
 
@@ -59,62 +61,44 @@ export const loginEmployee = async (req, res) => {
         return res.status(401).json({ message: 'Invalid ID number or password' });
     }
 
-    const currentDate = new Date().toISOString().split('T')[0];
-    const lastLoginDate = employee.lastLoginDate ? new Date(employee.lastLoginDate).toISOString().split('T')[0] : null;
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
 
-    if (currentDate !== lastLoginDate) {
-        try {
-            if (employee.loginTime) {
-                const [setHours, setMinutes] = employee.loginTime.split(":");
-                const period = employee.loginTime.split(" ")[1];
-                const actualHours = period === "PM" ? parseInt(setHours) + 12 : parseInt(setHours);
-                const setLoginTime = new Date();
-                setLoginTime.setHours(actualHours, parseInt(setMinutes), 0, 0);
+    try {
+        const actualLoginTimeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeDifference = (currentDate - new Date(`${currentDateString}T${employee.loginTime}`)) / (1000 * 60);
+        let status = 'Present';
 
-                const actualLoginTime = new Date();
-                const actualLoginTimeString = actualLoginTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (timeDifference <= -15) status = 'Early Bird';
+        else if (timeDifference > -15 && timeDifference < 0) status = 'Just In Time';
+        else if (timeDifference >= 0 && timeDifference <= 5) status = 'In Time, Do Better';
+        else if (timeDifference > 5 && timeDifference <= 15) status = 'Late';
+        else if (timeDifference > 15 && timeDifference <= 30) status = 'Absent';
 
-                const timeDifference = (actualLoginTime - setLoginTime) / (1000 * 60);
+        const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentDateString });
 
-                let status = 'Present';
-
-                if (timeDifference <= -15) {
-                    status = 'Early Bird';
-                } else if (timeDifference > -15 && timeDifference < 0) {
-                    status = 'Just In Time';
-                } else if (timeDifference >= 0 && timeDifference <= 5) {
-                    status = 'In Time, Do Better';
-                } else if (timeDifference > 5 && timeDifference <= 15) {
-                    status = 'Late';
-                } else if (timeDifference > 15 && timeDifference <= 30) {
-                    status = 'Absent';
-                }
-
-                const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentDate });
-
-                if (existingAttendance) {
-                    existingAttendance.loginTime = actualLoginTimeString;
-                    existingAttendance.status = status;
-                    await existingAttendance.save();
-                } else {
-                    const newAttendance = new EmployeeAttendance({
-                        employeeId: employee._id,
-                        date: new Date(),
-                        loginTime: actualLoginTimeString,
-                        status,
-                    });
-
-                    await newAttendance.save();
-                }
-            }
-
-            employee.lastLoginDate = new Date();
-            await employee.save();
-        } catch (error) {
-            return res.status(500).json({ message: 'Error recording attendance' });
+        if (existingAttendance) {
+            existingAttendance.loginTime = actualLoginTimeString;
+            existingAttendance.status = status;
+            existingAttendance.logoutTime = null;
+            existingAttendance.logoutStatus = null;
+            await existingAttendance.save();
+        } else {
+            const newAttendance = new EmployeeAttendance({
+                employeeId: employee._id,
+                date: currentDateString,
+                loginTime: actualLoginTimeString,
+                status,
+                logoutTime: null,
+                logoutStatus: null,
+            });
+            await newAttendance.save();
         }
+    } catch (error) {
+        return res.status(500).json({ message: 'Error recording attendance' });
     }
 
+    employee.lastLoginDate = currentDate;
     employee.isOnline = true;
     await employee.save();
 
@@ -123,53 +107,38 @@ export const loginEmployee = async (req, res) => {
     return res.status(200).json({ message: 'Employee logged in successfully', token, employee });
 };
 
-
-
-
 export const logoutEmployee = async (req, res) => {
     const { idNum } = req.body;
 
     const employee = await Employee.findOne({ idNum });
-
     if (!employee) {
-        return res.status(401).json({ message: 'Employee not found' });
+        return res.status(404).json({ message: 'Employee not found' });
     }
 
-    const currentTime = moment();
-    const logoutTime = moment(employee.logoutTime, ["h:mm A", "HH:mm"]);
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
 
-    let status = "Logged Out";
+    try {
+        const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentDateString });
 
-    if (currentTime.isBefore(logoutTime.subtract(5, 'minutes'))) {
-        status = "Early Bird";
-    } else if (currentTime.isAfter(logoutTime.add(20, 'minutes'))) {
-        status = "Overtime";
+        if (existingAttendance) {
+            const actualLogoutTimeString = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            existingAttendance.logoutTime = actualLogoutTimeString;
+            existingAttendance.logoutStatus = 'Logged Out';
+            await existingAttendance.save();
+
+            employee.isOnline = false;
+            await employee.save();
+
+            return res.status(200).json({ message: 'Employee logged out successfully', status: 'Logged Out' });
+        } else {
+            return res.status(400).json({ message: 'No attendance record found for today' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: 'Error during logout process' });
     }
-
-    const existingAttendance = await EmployeeAttendance.findOne({ employeeId: employee._id, date: currentTime.toISOString().split('T')[0] });
-
-    if (existingAttendance) {
-        existingAttendance.logoutTime = currentTime.format('h:mm A');
-        existingAttendance.status = status;
-        await existingAttendance.save();
-    } else {
-        const newAttendance = new EmployeeAttendance({
-            employeeId: employee._id,
-            date: currentTime.toDate(),
-            logoutTime: currentTime.format('h:mm A'),
-            status,  
-        });
-
-        await newAttendance.save();
-    }
-
-    employee.isOnline = false;
-    await employee.save();
-
-    return res.status(200).json({ message: 'Employee logged out successfully', employee });
 };
-
-
 
 
 

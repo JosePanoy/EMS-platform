@@ -11,43 +11,50 @@ function EmployeeNavbar({ handleLogout, employee }) {
     const [loading, setLoading] = useState(false);
     const [logoutStatus, setLogoutStatus] = useState("");
 
+    // Update time every second
     useEffect(() => {
         const interval = setInterval(() => {
             setTime(new Date().toLocaleTimeString());
         }, 1000);
 
-        return () => clearInterval(interval); 
+        return () => clearInterval(interval); // Cleanup interval on unmount
     }, []);
 
+    // Show the logout confirmation modal
     const handleShowModal = () => setShowModal(true);
+    
+    // Close the modal without logging out
     const handleCloseModal = () => setShowModal(false);
 
+    // Handle the logout confirmation
     const handleConfirmLogout = async () => {
-    setLoading(true);
-    try {
-        const response = await axios.post("http://localhost:8000/ems/employee/logout", {
-            idNum: employee.idNum
-        });
+        setLoading(true);
 
-        if (response.status === 200) {
-            setLogoutStatus(response.data.status);
-            setShowModal(false);
-            handleLogout();
-        }
-    } catch (error) {
-        console.error('Error during logout process:', error);
-        setLoading(false);
-        if (error.response) {
-            alert(`Error: ${error.response.data.message}`);
-        } else if (error.request) {
-            alert('Error: Network issue. Please check your server.');
-        } else {
-            alert('Error: An unexpected issue occurred.');
-        }
-    }
-};
+        // Simulate a 3-second delay before logging out
+        setTimeout(async () => {
+            try {
+                const response = await axios.post("http://localhost:8000/ems/employee/logout", {
+                    idNum: employee.idNum
+                });
 
-
+                if (response.status === 200) {
+                    setLogoutStatus(response.data.status);
+                    setShowModal(false); // Close the modal
+                    handleLogout(); // Execute the logout logic passed via props
+                }
+            } catch (error) {
+                console.error('Error during logout process:', error);
+                setLoading(false);
+                if (error.response) {
+                    alert(`Error: ${error.response.data.message}`);
+                } else if (error.request) {
+                    alert('Error: Network issue. Please check your server.');
+                } else {
+                    alert('Error: An unexpected issue occurred.');
+                }
+            }
+        }, 3000); // 3-second delay before logging out
+    };
 
     return (
         <>
